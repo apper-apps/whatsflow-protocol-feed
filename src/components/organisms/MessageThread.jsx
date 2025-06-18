@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { contactService, conversationService, messageService } from "@/services";
+import { contactService, conversationService, messageService, userService } from "@/services";
 import MessageBubble from "@/components/molecules/MessageBubble";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
@@ -120,17 +120,55 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
     }
   }
 
+const handleAssignAgent = async (agentName, isReassignment = false) => {
+    try {
+      const method = isReassignment ? 'reassignAgent' : 'assignAgent'
+      await conversationService[method](conversation.Id, agentName)
+      
+      // Log assignment activity with full audit trail
+      await conversationService.addActivity(conversation.Id, {
+        type: isReassignment ? 'reassignment' : 'assignment',
+        description: `Conversation ${isReassignment ? 'reassigned' : 'assigned'} to ${agentName}`,
+        fromAgent: isReassignment ? conversation.assignedTo : null,
+        toAgent: agentName,
+        agent: 'Current Agent', // Would come from auth context
+        reason: isReassignment ? 'Workload redistribution' : 'Initial assignment',
+        metadata: {
+          conversationStatus: conversation.status,
+          priority: conversation.priority,
+          leadScore: conversation.leadScore
+        }
+      })
+      
+      toast.success(`Conversation ${isReassignment ? 'reassigned' : 'assigned'} to ${agentName}`)
+      
+      // Update UI - trigger parent re-fetch
+      if (onStatusChange) {
+        onStatusChange(conversation.Id, conversation.status)
+      }
+    } catch (err) {
+      toast.error(`Failed to ${isReassignment ? 'reassign' : 'assign'} conversation`)
+      console.error('Assignment error:', err)
+    }
+  }
+
   const handleTransferChat = async (agentName) => {
     try {
       await conversationService.transferChat(conversation.Id, agentName)
       
-      // Log transfer activity
-      await conversationService.addStatusChangeActivity(conversation.Id, {
+      // Log transfer activity with enhanced audit trail
+      await conversationService.addActivity(conversation.Id, {
         type: 'transfer',
         description: `Chat transferred to ${agentName}`,
         fromAgent: conversation.assignedTo,
         toAgent: agentName,
-        agent: 'Current Agent' // Would come from auth context
+        agent: 'Current Agent', // Would come from auth context
+        reason: 'Agent transfer requested',
+        metadata: {
+          transferMethod: 'manual',
+          conversationStatus: conversation.status,
+          priority: conversation.priority
+        }
       })
       
       toast.success(`Chat transferred to ${agentName}`)
@@ -141,6 +179,7 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
       }
     } catch (err) {
       toast.error('Failed to transfer chat')
+      console.error('Transfer error:', err)
     }
   }
 
@@ -248,8 +287,9 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
                   Reopen
                 </Button>
               )}
-              <TransferChatButton 
+<AssignmentButton 
                 conversation={conversation}
+                onAssign={handleAssignAgent}
                 onTransfer={handleTransferChat}
               />
               <Button
@@ -404,11 +444,14 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
   )
 }
 
-// Transfer Chat Button Component
-const TransferChatButton = ({ conversation, onTransfer }) => {
-  const [showTransferModal, setShowTransferModal] = useState(false)
+// Assignment and Transfer Button Component
+const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
+  const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState('assign') // 'assign', 'reassign', 'transfer'
   const [teamMembers, setTeamMembers] = useState([])
   const [loading, setLoading] = useState(false)
+  const [selectedAgent, setSelectedAgent] = useState(null)
+  const [assignmentReason, setAssignmentReason] = useState('')
 
   useEffect(() => {
     loadTeamMembers()
@@ -416,18 +459,40 @@ const TransferChatButton = ({ conversation, onTransfer }) => {
 
   const loadTeamMembers = async () => {
     try {
-      const members = await contactService.getTeamMembers()
-      setTeamMembers(members)
+      // Using userService to get team members instead of contactService
+      const members = await userService.getAll()
+      const activeMembers = members.filter(member => 
+        member.status === 'active' && 
+        ['agent', 'manager', 'admin'].includes(member.role)
+      )
+      setTeamMembers(activeMembers)
     } catch (err) {
       console.error('Failed to load team members:', err)
+      toast.error('Failed to load team members')
     }
   }
 
-  const handleTransfer = async (member) => {
+  const handleOpenModal = (type) => {
+    setModalType(type)
+    setShowModal(true)
+    setSelectedAgent(null)
+    setAssignmentReason('')
+  }
+
+  const handleConfirmAction = async () => {
+    if (!selectedAgent) {
+      toast.error('Please select an agent')
+      return
+    }
+
     setLoading(true)
     try {
-      await onTransfer(member.name)
-      setShowTransferModal(false)
+      if (modalType === 'transfer') {
+        await onTransfer(selectedAgent.name)
+      } else {
+        await onAssign(selectedAgent.name, modalType === 'reassign')
+      }
+      setShowModal(false)
     } catch (err) {
       // Error handling done in parent
     } finally {
@@ -435,65 +500,175 @@ const TransferChatButton = ({ conversation, onTransfer }) => {
     }
   }
 
+  const getModalTitle = () => {
+    switch (modalType) {
+      case 'assign': return 'Assign Conversation'
+      case 'reassign': return 'Reassign Conversation'
+      case 'transfer': return 'Transfer Conversation'
+      default: return 'Manage Assignment'
+    }
+  }
+
+  const getModalDescription = () => {
+    switch (modalType) {
+      case 'assign': return 'Select an agent to assign this conversation to:'
+      case 'reassign': return 'Select a new agent to reassign this conversation to:'
+      case 'transfer': return 'Select an agent to transfer this conversation to:'
+      default: return 'Select an agent:'
+    }
+  }
+
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        icon="ArrowRightLeft"
-        onClick={() => setShowTransferModal(true)}
-      >
-        Transfer
-      </Button>
+      {!conversation.assignedTo ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          icon="UserPlus"
+          onClick={() => handleOpenModal('assign')}
+        >
+          Assign
+        </Button>
+      ) : (
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="UserCheck"
+            onClick={() => handleOpenModal('reassign')}
+          >
+            Reassign
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="ArrowRightLeft"
+            onClick={() => handleOpenModal('transfer')}
+          >
+            Transfer
+          </Button>
+        </div>
+      )}
 
-      {showTransferModal && (
+      {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+            className="bg-white rounded-lg p-6 w-full max-w-lg mx-4"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-surface-900">Transfer Chat</h3>
+              <h3 className="text-lg font-semibold text-surface-900">{getModalTitle()}</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 icon="X"
-                onClick={() => setShowTransferModal(false)}
+                onClick={() => setShowModal(false)}
               />
             </div>
 
             <p className="text-sm text-surface-600 mb-4">
-              Select an agent to transfer this conversation to:
+              {getModalDescription()}
             </p>
 
-            <div className="space-y-2 max-h-60 overflow-y-auto">
+            {/* Current Assignment Info */}
+            {conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
+              <div className="bg-surface-50 p-3 rounded-lg mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <ApperIcon name="User" size={16} className="text-surface-500" />
+                  <span className="text-surface-600">Currently assigned to:</span>
+                  <span className="font-medium text-surface-900">{conversation.assignedTo}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Agent Selection */}
+            <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
               {teamMembers.map((member) => (
                 <button
                   key={member.Id}
-                  onClick={() => handleTransfer(member)}
+                  onClick={() => setSelectedAgent(member)}
                   disabled={loading || member.name === conversation.assignedTo}
-                  className="w-full text-left p-3 rounded-lg border border-surface-200 hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                    selectedAgent?.Id === member.Id
+                      ? 'border-primary bg-primary/5'
+                      : 'border-surface-200 hover:bg-surface-50'
+                  } ${
+                    member.name === conversation.assignedTo
+                      ? 'opacity-50 cursor-not-allowed'
+                      : ''
+                  }`}
                 >
-                  <div className="font-medium text-surface-900">{member.name}</div>
-                  <div className="text-sm text-surface-600">{member.role}</div>
-                  {member.name === conversation.assignedTo && (
-                    <div className="text-xs text-blue-600 mt-1">Currently assigned</div>
-                  )}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-surface-900">{member.name}</div>
+                      <div className="text-sm text-surface-600 capitalize">{member.role}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        member.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                      }`} />
+                      {member.name === conversation.assignedTo && (
+                        <span className="text-xs text-blue-600">Current</span>
+                      )}
+                      {selectedAgent?.Id === member.Id && (
+                        <ApperIcon name="Check" size={16} className="text-primary" />
+                      )}
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
 
-            <div className="flex gap-2 mt-6">
+            {/* Assignment Reason (Optional) */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-surface-700 mb-2">
+                Reason (Optional)
+              </label>
+              <Input
+                placeholder={`Reason for ${modalType}...`}
+                value={assignmentReason}
+                onChange={(e) => setAssignmentReason(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowTransferModal(false)}
+                onClick={() => setShowModal(false)}
                 className="flex-1"
+                disabled={loading}
               >
                 Cancel
               </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleConfirmAction}
+                className="flex-1"
+                disabled={!selectedAgent || loading}
+                loading={loading}
+              >
+                {modalType === 'assign' ? 'Assign' : modalType === 'reassign' ? 'Reassign' : 'Transfer'}
+              </Button>
             </div>
+
+            {/* Audit Trail Preview */}
+            {selectedAgent && (
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <div className="text-xs text-blue-800 font-medium mb-1">Audit Trail Preview:</div>
+                <div className="text-xs text-blue-700">
+                  {modalType === 'assign' 
+                    ? `Will assign conversation to ${selectedAgent.name}`
+                    : `Will ${modalType} conversation from ${conversation.assignedTo} to ${selectedAgent.name}`
+                  }
+                  {assignmentReason && ` (Reason: ${assignmentReason})`}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       )}

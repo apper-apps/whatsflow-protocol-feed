@@ -65,8 +65,71 @@ async getByStatus(status) {
     return this.update(id, { status })
   }
 async assignAgent(id, agentName) {
-    await delay(200)
-    return this.update(id, { assignedTo: agentName })
+    await delay(300)
+    const index = this.conversations.findIndex(c => c.Id === parseInt(id, 10))
+    if (index === -1) return null
+    
+    const conversation = this.conversations[index]
+    const timestamp = new Date().toISOString()
+    
+    // Initialize assignment history if it doesn't exist
+    if (!conversation.assignmentHistory) {
+      conversation.assignmentHistory = []
+    }
+    
+    // Add to assignment history
+    conversation.assignmentHistory.push({
+      action: 'assigned',
+      fromAgent: null,
+      toAgent: agentName,
+      timestamp,
+      reason: 'Initial assignment'
+    })
+    
+    const updatedConversation = {
+      ...conversation,
+      assignedTo: agentName,
+      assignedAt: timestamp,
+      updatedAt: timestamp
+    }
+    
+    this.conversations[index] = updatedConversation
+    return {...updatedConversation}
+  }
+
+  async reassignAgent(id, newAgentName) {
+    await delay(300)
+    const index = this.conversations.findIndex(c => c.Id === parseInt(id, 10))
+    if (index === -1) return null
+    
+    const conversation = this.conversations[index]
+    const oldAgent = conversation.assignedTo
+    const timestamp = new Date().toISOString()
+    
+    // Initialize assignment history if it doesn't exist
+    if (!conversation.assignmentHistory) {
+      conversation.assignmentHistory = []
+    }
+    
+    // Add to assignment history
+    conversation.assignmentHistory.push({
+      action: 'reassigned',
+      fromAgent: oldAgent,
+      toAgent: newAgentName,
+      timestamp,
+      reason: 'Agent reassignment'
+    })
+    
+    const updatedConversation = {
+      ...conversation,
+      assignedTo: newAgentName,
+      reassignedAt: timestamp,
+      reassignedFrom: oldAgent,
+      updatedAt: timestamp
+    }
+    
+    this.conversations[index] = updatedConversation
+    return {...updatedConversation}
   }
 
   async transferChat(id, newAgentName) {
@@ -76,13 +139,28 @@ async assignAgent(id, agentName) {
     
     const conversation = this.conversations[index]
     const oldAgent = conversation.assignedTo
+    const timestamp = new Date().toISOString()
+    
+    // Initialize assignment history if it doesn't exist
+    if (!conversation.assignmentHistory) {
+      conversation.assignmentHistory = []
+    }
+    
+    // Add to assignment history
+    conversation.assignmentHistory.push({
+      action: 'transferred',
+      fromAgent: oldAgent,
+      toAgent: newAgentName,
+      timestamp,
+      reason: 'Agent transfer'
+    })
     
     const updatedConversation = {
       ...conversation,
       assignedTo: newAgentName,
-      transferredAt: new Date().toISOString(),
+      transferredAt: timestamp,
       transferredFrom: oldAgent,
-      updatedAt: new Date().toISOString()
+      updatedAt: timestamp
     }
     
     this.conversations[index] = updatedConversation
@@ -119,12 +197,49 @@ async assignAgent(id, agentName) {
     return conversation?.activities || []
   }
 
-  async getStatusHistory(conversationId) {
+async getStatusHistory(conversationId) {
     await delay(200)
     const activities = await this.getActivities(conversationId)
     return activities.filter(activity => 
-      ['status_change', 'transfer', 'lead_stage_change'].includes(activity.type)
+      ['status_change', 'transfer', 'assignment', 'reassignment', 'lead_stage_change'].includes(activity.type)
     )
+  }
+
+  async getAssignmentHistory(conversationId) {
+    await delay(200)
+    const conversation = this.conversations.find(c => c.Id === parseInt(conversationId, 10))
+    if (!conversation) return []
+    
+    // Return both the assignment history array and related activities
+    const assignmentHistory = conversation.assignmentHistory || []
+    const assignmentActivities = await this.getActivities(conversationId)
+    const assignmentRelatedActivities = assignmentActivities.filter(activity =>
+      ['assignment', 'reassignment', 'transfer'].includes(activity.type)
+    )
+    
+    // Combine and sort by timestamp
+    const allAssignmentEvents = [
+      ...assignmentHistory.map(h => ({ ...h, source: 'history' })),
+      ...assignmentRelatedActivities.map(a => ({ ...a, source: 'activity' }))
+    ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    
+    return allAssignmentEvents
+  }
+
+  async getAuditTrail(conversationId) {
+    await delay(200)
+    const [activities, assignmentHistory] = await Promise.all([
+      this.getActivities(conversationId),
+      this.getAssignmentHistory(conversationId)
+    ])
+    
+    // Combine all audit events
+    const auditTrail = [
+      ...activities,
+      ...assignmentHistory.filter(h => h.source === 'history')
+    ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    
+    return auditTrail
   }
 }
 

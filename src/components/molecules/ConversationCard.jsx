@@ -113,13 +113,31 @@ return (
             
             <div className="flex items-center gap-1 text-xs text-surface-500">
               <ApperIcon name="User" size={12} />
-              <span className={conversation?.assignedTo ? 'text-surface-700' : 'text-surface-400'}>
-                {conversation?.assignedTo || 'Unassigned'}
-              </span>
-              {conversation?.transferredAt && (
+              <div className="flex items-center gap-1">
+                <span className={conversation?.assignedTo ? 'text-surface-700 font-medium' : 'text-surface-400'}>
+                  {conversation?.assignedTo || 'Unassigned'}
+                </span>
+                {conversation?.assignedTo && (
+                  <div className={`w-2 h-2 rounded-full ${
+                    conversation?.status === 'ongoing' ? 'bg-green-500' : 'bg-yellow-500'
+                  }`} title="Agent Status" />
+                )}
+              </div>
+              {(conversation?.transferredAt || conversation?.reassignedAt) && (
                 <div className="ml-1 flex items-center gap-1 text-xs text-blue-600">
                   <ApperIcon name="ArrowRightLeft" size={10} />
-                  <span>Transferred</span>
+                  <span title={`${conversation?.transferredAt ? 'Transferred' : 'Reassigned'} at ${
+                    conversation?.transferredAt || conversation?.reassignedAt
+                  }`}>
+                    {conversation?.transferredAt ? 'Transferred' : 'Reassigned'}
+                  </span>
+                </div>
+              )}
+              {conversation?.assignmentHistory?.length > 1 && (
+                <div className="ml-1 flex items-center gap-1 text-xs text-purple-600" 
+                     title={`Assignment history: ${conversation.assignmentHistory.length} changes`}>
+                  <ApperIcon name="History" size={10} />
+                  <span>{conversation.assignmentHistory.length}</span>
                 </div>
               )}
             </div>
