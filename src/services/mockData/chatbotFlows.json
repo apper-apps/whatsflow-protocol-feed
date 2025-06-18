@@ -1,0 +1,180 @@
+[
+  {
+    "Id": 1,
+    "name": "Welcome Flow",
+    "description": "Initial greeting and menu options for new users",
+    "status": "active",
+    "nodes": [
+      {
+        "id": "start-1",
+        "type": "custom",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "start",
+          "label": "Start",
+          "content": ""
+        }
+      },
+      {
+        "id": "message-1",
+        "type": "custom",
+        "position": { "x": 300, "y": 100 },
+        "data": {
+          "type": "message",
+          "label": "Welcome Message",
+          "content": "Welcome to our service! How can I help you today?"
+        }
+      },
+      {
+        "id": "question-1",
+        "type": "custom",
+        "position": { "x": 500, "y": 100 },
+        "data": {
+          "type": "question",
+          "label": "Service Options",
+          "content": "Please select: 1) Support 2) Sales 3) General Info"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1-2",
+        "source": "start-1",
+        "target": "message-1",
+        "type": "smoothstep"
+      },
+      {
+        "id": "e2-3",
+        "source": "message-1",
+        "target": "question-1",
+        "type": "smoothstep"
+      }
+    ],
+    "createdAt": "1/10/2024 10:00:00 AMZ",
+    "updatedAt": "2024-01-10T10:00:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Support Flow",
+    "description": "Customer support assistance flow",
+    "status": "draft",
+    "nodes": [
+      {
+        "id": "start-2",
+        "type": "custom",
+        "position": { "x": 100, "y": 150 },
+        "data": {
+          "type": "start",
+          "label": "Start",
+          "content": ""
+        }
+      },
+      {
+        "id": "question-2",
+        "type": "custom",
+        "position": { "x": 300, "y": 150 },
+        "data": {
+          "type": "question",
+          "label": "Issue Type",
+          "content": "What type of issue are you experiencing?"
+        }
+      },
+      {
+        "id": "condition-1",
+        "type": "custom",
+        "position": { "x": 500, "y": 150 },
+        "data": {
+          "type": "condition",
+          "label": "Route Support",
+          "content": "Route based on issue type"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1-2-support",
+        "source": "start-2",
+        "target": "question-2",
+        "type": "smoothstep"
+      },
+      {
+        "id": "e2-3-support",
+        "source": "question-2",
+        "target": "condition-1",
+        "type": "smoothstep"
+      }
+    ],
+    "createdAt": "2024-01-10T11:00:00Z",
+    "updatedAt": "2024-01-10T11:00:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Lead Qualification",
+    "description": "Qualify potential leads and collect information",
+    "status": "active",
+    "nodes": [
+      {
+        "id": "start-3",
+        "type": "custom",
+        "position": { "x": 100, "y": 200 },
+        "data": {
+          "type": "start",
+          "label": "Start",
+          "content": ""
+        }
+      },
+      {
+        "id": "message-3",
+        "type": "custom",
+        "position": { "x": 300, "y": 200 },
+        "data": {
+          "type": "message",
+          "label": "Introduction",
+          "content": "Hi! I'd love to learn more about your needs."
+        }
+      },
+      {
+        "id": "question-3",
+        "type": "custom",
+        "position": { "x": 500, "y": 200 },
+        "data": {
+          "type": "question",
+          "label": "Company Size",
+          "content": "How many employees does your company have?"
+        }
+      },
+      {
+        "id": "action-1",
+        "type": "custom",
+        "position": { "x": 700, "y": 200 },
+        "data": {
+          "type": "action",
+          "label": "Save Lead",
+          "content": "Save lead information to CRM"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1-2-lead",
+        "source": "start-3",
+        "target": "message-3",
+        "type": "smoothstep"
+      },
+      {
+        "id": "e2-3-lead",
+        "source": "message-3",
+        "target": "question-3",
+        "type": "smoothstep"
+      },
+      {
+        "id": "e3-4-lead",
+        "source": "question-3",
+        "target": "action-1",
+        "type": "smoothstep"
+      }
+    ],
+    "createdAt": "2024-01-10T12:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z"
+  }
+]
