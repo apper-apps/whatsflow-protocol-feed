@@ -1,62 +1,57 @@
-import mockData from '../mockData/chatbotFlows.json';
+import mockData from '../mockData/chatbotFlows.json'
 
-let flows = [...mockData];
-let nextId = Math.max(...flows.map(f => f.Id)) + 1;
+const flows = [...mockData]
+let nextId = flows.length > 0 ? Math.max(...flows.map(f => f.id)) + 1 : 1
 
-export const getAll = async () => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  return [...flows];
-};
+export const getAll = () => {
+  return Promise.resolve(flows)
+}
 
-export const getById = async (id) => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const parsedId = parseInt(id);
-  const flow = flows.find(f => f.Id === parsedId);
-  return flow ? { ...flow } : null;
-};
+export const getById = (id) => {
+  const flow = flows.find(f => f.id === parseInt(id))
+  return flow ? Promise.resolve(flow) : Promise.reject(new Error('Flow not found'))
+}
 
-export const create = async (flowData) => {
-  await new Promise(resolve => setTimeout(resolve, 200));
+export const create = (flowData) => {
   const newFlow = {
-    Id: nextId++,
+    id: nextId++,
     ...flowData,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
-  };
-  flows.push(newFlow);
-  return { ...newFlow };
-};
-
-export const update = async (id, flowData) => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const parsedId = parseInt(id);
-  const index = flows.findIndex(f => f.Id === parsedId);
-  
-  if (index === -1) {
-    throw new Error('Flow not found');
   }
-  
+  flows.push(newFlow)
+  return Promise.resolve(newFlow)
+}
+
+export const update = (id, updates) => {
+  const index = flows.findIndex(f => f.id === parseInt(id))
+  if (index === -1) {
+    return Promise.reject(new Error('Flow not found'))
+  }
   flows[index] = {
     ...flows[index],
-    ...flowData,
-    Id: parsedId,
+    ...updates,
     updatedAt: new Date().toISOString()
-  };
-  
-  return { ...flows[index] };
-};
-
-export const delete_ = async (id) => {
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const parsedId = parseInt(id);
-  const index = flows.findIndex(f => f.Id === parsedId);
-  
-  if (index === -1) {
-    throw new Error('Flow not found');
   }
-  
-  flows.splice(index, 1);
-  return true;
-};
+  return Promise.resolve(flows[index])
+}
 
-export { delete_ as delete };
+export const delete_ = (id) => {
+  const index = flows.findIndex(f => f.id === parseInt(id))
+  if (index === -1) {
+    return Promise.reject(new Error('Flow not found'))
+  }
+  const deletedFlow = flows.splice(index, 1)[0]
+  return Promise.resolve(deletedFlow)
+}
+// Default export - service object with all methods
+const chatbotFlowService = {
+  getAll,
+  getById,
+  create,
+  update,
+  delete: delete_,
+  delete_
+}
+
+export default chatbotFlowService
