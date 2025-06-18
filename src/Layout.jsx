@@ -148,9 +148,20 @@ const Layout = () => {
           )}
         </AnimatePresence>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          <Outlet />
+{/* Main Content */}
+        <main className="flex-1 flex overflow-hidden">
+          {/* Center Content Area */}
+          <div className="flex-1 overflow-y-auto">
+            <Outlet />
+          </div>
+          
+          {/* Right Panel Area - Hidden on mobile, visible on larger screens */}
+          <aside className="hidden xl:flex w-80 bg-white border-l border-surface-200 flex-col overflow-hidden">
+            {/* Right panel content will be rendered here by components */}
+            <div className="flex-1 overflow-y-auto">
+              {/* Placeholder for right panel content */}
+            </div>
+          </aside>
         </main>
       </div>
     </div>
