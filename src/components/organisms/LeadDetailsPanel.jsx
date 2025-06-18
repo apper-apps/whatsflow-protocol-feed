@@ -384,7 +384,7 @@ const handleSave = async () => {
                                 {activity.type}
                             </Badge>
                         </div>
-                        {/* Activity Details */}
+{/* Activity Details */}
                         {activity.details && <div className="bg-surface-50 rounded-lg p-3 space-y-2">
                             {activity.type === "call" && activity.details.duration && <div className="flex items-center gap-2 text-xs text-surface-600">
                                 <ApperIcon name="Clock" size={12} />Duration: {activity.details.duration}
@@ -407,9 +407,9 @@ const handleSave = async () => {
                                 <ApperIcon name="MessageSquare" size={12} />
                                 {activity.details.platform}
                                 {activity.details.messageCount && <>
-{activity.details.messageCount} messages
+                                    <span>•</span>
+                                    <span>{activity.details.messageCount} messages</span>
                                 </>}
-                            </div>}
                             </div>}
                             {activity.type === "note" && activity.details.category && <div className="flex items-center gap-2 text-xs text-surface-600">
                                 <ApperIcon name="Tag" size={12} />
