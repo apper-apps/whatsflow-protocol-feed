@@ -1,0 +1,82 @@
+[
+  {
+    "Id": 1,
+    "name": "John Smith",
+    "email": "john.smith@techcorp.com",
+    "phone": "+1 (555) 123-4567",
+    "company": "TechCorp Solutions",
+    "status": "active",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Sarah Johnson",
+    "email": "sarah.johnson@innovate.io",
+    "phone": "+1 (555) 234-5678",
+    "company": "Innovate Technologies",
+    "status": "active",
+    "createdAt": "2024-01-16T14:20:00Z",
+    "updatedAt": "2024-01-16T14:20:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Michael Brown",
+    "email": "m.brown@digitalwave.com",
+    "phone": "+1 (555) 345-6789",
+    "company": "Digital Wave Inc",
+    "status": "active",
+    "createdAt": "2024-01-17T09:15:00Z",
+    "updatedAt": "2024-01-17T09:15:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Emily Davis",
+    "email": "emily.davis@cloudnext.org",
+    "phone": "+1 (555) 456-7890",
+    "company": "CloudNext Solutions",
+    "status": "inactive",
+    "createdAt": "2024-01-18T16:45:00Z",
+    "updatedAt": "2024-01-18T16:45:00Z"
+  },
+  {
+    "Id": 5,
+    "name": "Robert Wilson",
+    "email": "robert.wilson@futuretech.net",
+    "phone": "+1 (555) 567-8901",
+    "company": "FutureTech Systems",
+    "status": "active",
+    "createdAt": "2024-01-19T11:30:00Z",
+    "updatedAt": "2024-01-19T11:30:00Z"
+  },
+  {
+    "Id": 6,
+    "name": "Lisa Anderson",
+    "email": "lisa.anderson@smartbiz.com",
+    "phone": "+1 (555) 678-9012",
+    "company": "SmartBiz Enterprise",
+    "status": "active",
+    "createdAt": "2024-01-20T13:25:00Z",
+    "updatedAt": "2024-01-20T13:25:00Z"
+  },
+  {
+    "Id": 7,
+    "name": "David Thompson",
+    "email": "david.thompson@nexgen.co",
+    "phone": "+1 (555) 789-0123",
+    "company": "NexGen Corporation",
+    "status": "active",
+    "createdAt": "2024-01-21T08:40:00Z",
+    "updatedAt": "2024-01-21T08:40:00Z"
+  },
+  {
+    "Id": 8,
+    "name": "Jessica Martinez",
+    "email": "jessica.martinez@proactive.biz",
+    "phone": "+1 (555) 890-1234",
+    "company": "ProActive Business",
+    "status": "inactive",
+    "createdAt": "2024-01-22T15:10:00Z",
+    "updatedAt": "2024-01-22T15:10:00Z"
+  }
+]

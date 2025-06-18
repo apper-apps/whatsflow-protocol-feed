@@ -1,17 +1,25 @@
-// Import all services into local scope
+import conversationService from './api/conversationService.js'
+import messageService from './api/messageService.js'
 import contactService from './api/contactService.js'
 import templateService from './api/templateService.js'
-import messageService from './api/messageService.js'
-import chatbotFlowService from './api/chatbotFlowService.js'
-import conversationService from './api/conversationService.js'
 import userService from './api/userService.js'
+import clientService from './api/clientService.js'
+import featureAccessService from './api/featureAccessService.js'
 import billingService from './api/billingService.js'
+import chatbotFlowService from './api/chatbotFlowService.js'
 
-// Export services with consistent naming
-export const contactAPI = contactService
-export const templateAPI = templateService
-export const conversationAPI = conversationService
-export const messageAPI = messageService
+export {
+  conversationService,
+  messageService,
+  contactService,
+  templateService,
+  userService,
+  billingService,
+  chatbotFlowService,
+  clientService,
+  featureAccessService
+}
+
 export const chatbotFlowAPI = chatbotFlowService
 export const userAPI = userService
 export const billingAPI = billingService

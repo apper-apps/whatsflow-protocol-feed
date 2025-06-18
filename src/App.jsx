@@ -8,6 +8,7 @@ import Analytics from '@/components/pages/Analytics'
 import Settings from '@/components/pages/Settings'
 import Users from '@/components/pages/Users'
 import Billing from '@/components/pages/Billing'
+import Admin from '@/components/pages/Admin'
 import NotFound from '@/components/pages/NotFound'
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
 <Route path="analytics" element={<Analytics />} />
             <Route path="users" element={<Users />} />
             <Route path="billing" element={<Billing />} />
+            <Route path="admin" element={<Admin />} />
             <Route path="settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Route>

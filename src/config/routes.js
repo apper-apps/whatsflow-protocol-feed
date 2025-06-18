@@ -4,6 +4,7 @@ import Templates from '@/components/pages/Templates';
 import Analytics from '@/components/pages/Analytics';
 import Users from '@/components/pages/Users';
 import Billing from '@/components/pages/Billing';
+import Admin from '@/components/pages/Admin';
 import Settings from '@/components/pages/Settings';
 export const routes = {
   inbox: {
@@ -49,12 +50,19 @@ path: '/settings',
     icon: 'Users',
     component: Users
   },
-  billing: {
+billing: {
     id: 'billing',
     label: 'Billing',
     path: '/billing',
     icon: 'CreditCard',
     component: Billing
+  },
+  admin: {
+    id: 'admin',
+    label: 'Admin',
+    path: '/admin',
+    icon: 'Shield',
+    component: Admin
   }
 };
 
