@@ -8,28 +8,20 @@ import featureAccessService from './api/featureAccessService.js'
 import billingService from './api/billingService.js'
 import chatbotFlowService from './api/chatbotFlowService.js'
 
+// Export all services in a single, clean export block
 export {
   conversationService,
   messageService,
   contactService,
   templateService,
   userService,
-  billingService,
-  chatbotFlowService,
   clientService,
-  featureAccessService
+  featureAccessService,
+  billingService,
+  chatbotFlowService
 }
 
-export const chatbotFlowAPI = chatbotFlowService
-export const userAPI = userService
-export const billingAPI = billingService
-
-export {
-  contactService,
-  templateService,
-  conversationService,
-  messageService,
-  chatbotFlowService,
-  userService,
-  billingService
-}
+// Export aliases for backward compatibility
+export { billingService as billingAPI }
+export { userService as userAPI }
+export { chatbotFlowService as chatbotFlowAPI }
