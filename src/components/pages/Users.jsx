@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import Input from '@/components/atoms/Input'
-import Badge from '@/components/atoms/Badge'
-import Avatar from '@/components/atoms/Avatar'
-import { userService } from '@/services'
-import UserModal from '@/components/molecules/UserModal'
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { saveAs } from "file-saver";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Badge from "@/components/atoms/Badge";
+import Avatar from "@/components/atoms/Avatar";
+import { userService } from "@/services";
+import UserModal from "@/components/molecules/UserModal";
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -17,7 +18,9 @@ const Users = () => {
   const [filterRole, setFilterRole] = useState('all')
   const [showModal, setShowModal] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
-
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectAll, setSelectAll] = useState(false)
+  const [showExportModal, setShowExportModal] = useState(false)
   useEffect(() => {
     loadUsers()
   }, [])
@@ -72,6 +75,115 @@ const Users = () => {
       setShowModal(false)
     } catch (err) {
       toast.error('Failed to save user')
+    }
+}
+
+  const toggleSelectUser = (userId) => {
+    setSelectedUsers(prev => {
+      const isSelected = prev.includes(userId)
+      const newSelected = isSelected 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+      
+      // Update select all state
+      setSelectAll(newSelected.length === filteredUsers.length && filteredUsers.length > 0)
+      return newSelected
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectAll) {
+      setSelectedUsers([])
+      setSelectAll(false)
+    } else {
+      const allUserIds = filteredUsers.map(user => user.Id)
+      setSelectedUsers(allUserIds)
+      setSelectAll(true)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select users to delete')
+      return
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}?`
+    if (!confirm(confirmMessage)) return
+
+    try {
+      // Delete selected users
+      await Promise.all(selectedUsers.map(userId => userService.delete(userId)))
+      
+      // Update state
+      setUsers(prev => prev.filter(u => !selectedUsers.includes(u.Id)))
+      setSelectedUsers([])
+      setSelectAll(false)
+      
+      toast.success(`${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''} deleted successfully`)
+    } catch (err) {
+      toast.error('Failed to delete users')
+    }
+  }
+
+  const handleExport = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select users to export')
+      return
+    }
+    setShowExportModal(true)
+  }
+
+  const generateCSV = (users) => {
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Department', 'Last Login']
+    const rows = users.map(user => [
+      user.Id,
+      user.name,
+      user.email,
+      user.phone || '',
+      user.role,
+      user.status,
+      user.department || '',
+      user.lastLogin || ''
+    ])
+    
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n')
+    
+    return csvContent
+  }
+
+  const generateJSON = (users) => {
+    return JSON.stringify(users, null, 2)
+  }
+
+  const exportUsers = (format) => {
+    const selectedUserData = users.filter(user => selectedUsers.includes(user.Id))
+    
+    if (selectedUserData.length === 0) {
+      toast.error('No users selected for export')
+      return
+    }
+
+    const timestamp = new Date().toISOString().split('T')[0]
+    
+    try {
+      if (format === 'csv') {
+        const csvContent = generateCSV(selectedUserData)
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        saveAs(blob, `users-export-${timestamp}.csv`)
+        toast.success(`${selectedUserData.length} users exported as CSV`)
+      } else if (format === 'json') {
+        const jsonContent = generateJSON(selectedUserData)
+        const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' })
+        saveAs(blob, `users-export-${timestamp}.json`)
+        toast.success(`${selectedUserData.length} users exported as JSON`)
+      }
+      
+      setShowExportModal(false)
+    } catch (err) {
+      toast.error('Failed to export users')
     }
   }
 
@@ -136,7 +248,7 @@ const Users = () => {
         <p className="text-surface-600">Manage users, roles, and permissions</p>
       </div>
 
-      {/* Header Controls */}
+{/* Header Controls */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1">
           <Input
@@ -157,18 +269,35 @@ const Users = () => {
             <option value="manager">Manager</option>
             <option value="agent">Agent</option>
           </select>
+          {selectedUsers.length > 0 && (
+            <>
+              <Button variant="outline" icon="Download" onClick={handleExport}>
+                Export ({selectedUsers.length})
+              </Button>
+              <Button variant="danger" icon="Trash2" onClick={handleBulkDelete}>
+                Delete ({selectedUsers.length})
+              </Button>
+            </>
+          )}
           <Button icon="Plus" onClick={handleAddUser}>
             Add User
           </Button>
         </div>
       </div>
-
       {/* Users Table */}
       <div className="bg-white rounded-lg border border-surface-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-surface-50 border-b border-surface-200">
+<thead className="bg-surface-50 border-b border-surface-200">
               <tr>
+                <th className="text-left py-3 px-4 font-medium text-surface-700 w-12">
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={toggleSelectAll}
+                    className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20"
+                  />
+                </th>
                 <th className="text-left py-3 px-4 font-medium text-surface-700">User</th>
                 <th className="text-left py-3 px-4 font-medium text-surface-700">Contact</th>
                 <th className="text-left py-3 px-4 font-medium text-surface-700">Role</th>
@@ -178,7 +307,7 @@ const Users = () => {
             </thead>
             <tbody>
               <AnimatePresence>
-                {filteredUsers.map((user, index) => (
+{filteredUsers.map((user, index) => (
                   <motion.tr
                     key={user.Id}
                     initial={{ opacity: 0, y: 20 }}
@@ -186,6 +315,14 @@ const Users = () => {
                     transition={{ delay: index * 0.1 }}
                     className="border-b border-surface-100 hover:bg-surface-50"
                   >
+                    <td className="py-4 px-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(user.Id)}
+                        onChange={() => toggleSelectUser(user.Id)}
+                        className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20"
+                      />
+                    </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
                         <Avatar name={user.name} size="sm" />
@@ -234,6 +371,7 @@ const Users = () => {
             </tbody>
           </table>
         </div>
+</div>
 
         {filteredUsers.length === 0 && (
           <div className="text-center py-12">
@@ -249,13 +387,97 @@ const Users = () => {
         )}
       </div>
 
+      {/* Selected Users Summary */}
+      {selectedUsers.length > 0 && (
+        <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-primary">
+              {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''} selected
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSelectedUsers([])
+                setSelectAll(false)
+              }}
+            >
+              Clear Selection
+            </Button>
+          </div>
+        </div>
+      )}
       {/* User Modal */}
       <UserModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onSave={handleSaveUser}
-        user={editingUser}
-      />
+/>
+
+      {/* Export Modal */}
+      {showExportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-surface-900">Export Users</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="X"
+                onClick={() => setShowExportModal(false)}
+              />
+            </div>
+            
+            <div className="mb-6">
+              <p className="text-surface-600 mb-4">
+                Export {selectedUsers.length} selected user{selectedUsers.length > 1 ? 's' : ''} in your preferred format:
+              </p>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={() => exportUsers('csv')}
+                  className="w-full p-4 text-left border border-surface-200 rounded-lg hover:bg-surface-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <ApperIcon name="FileText" size={20} className="text-green-600" />
+                    <div>
+                      <div className="font-medium text-surface-900">CSV Format</div>
+                      <div className="text-sm text-surface-500">Comma-separated values, compatible with Excel</div>
+                    </div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => exportUsers('json')}
+                  className="w-full p-4 text-left border border-surface-200 rounded-lg hover:bg-surface-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <ApperIcon name="Code" size={20} className="text-blue-600" />
+                    <div>
+                      <div className="font-medium text-surface-900">JSON Format</div>
+                      <div className="text-sm text-surface-500">JavaScript Object Notation, structured data</div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowExportModal(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   )
 }
