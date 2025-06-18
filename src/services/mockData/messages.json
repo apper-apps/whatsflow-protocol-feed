@@ -2,7 +2,7 @@
   {
     "Id": 1,
     "conversationId": 1,
-    "text": "Hi! I need help with my order #12345",
+    "text": "Hi! I need urgent help with my order #ORD-2024-12345",
     "mediaUrl": null,
     "timestamp": "2024-01-15T10:25:00Z",
     "isIncoming": true,
@@ -11,7 +11,7 @@
   {
     "Id": 2,
     "conversationId": 1,
-    "text": "Hello Sarah! I'd be happy to help you with your order. Let me check the status for you.",
+    "text": "Hello Sarah! I'd be happy to help you with your order. Let me check the status for you right away.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T10:26:00Z",
     "isIncoming": false,
@@ -20,90 +20,306 @@
   {
     "Id": 3,
     "conversationId": 1,
-    "text": "Actually, I also wanted to ask about the return policy",
+    "text": "It should have arrived yesterday but tracking shows no updates. This is for my daughter's birthday tomorrow!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T10:27:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 4,
+    "conversationId": 1,
+    "text": "I completely understand how urgent this is! I'm checking with our shipping partner now. It looks like there was a delay at the distribution center.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T10:28:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 5,
+    "conversationId": 1,
+    "text": "Actually, I also wanted to ask about the return policy in case there are any issues with the gift",
     "mediaUrl": null,
     "timestamp": "2024-01-15T10:30:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 4,
+    "Id": 6,
     "conversationId": 2,
-    "text": "I received my order today and everything looks great!",
+    "text": "Hi there! I'm interested in your premium plan but the pricing seems a bit high. Do you offer any discounts?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 7,
+    "conversationId": 2,
+    "text": "Hi Michael! Great to hear from you. Yes, we do have some special offers available. Let me check what discounts we can apply to your account.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:32:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 8,
+    "conversationId": 2,
+    "text": "I can offer you a 20% discount with code SAVE20 if you sign up today. This is valid for the first year of your subscription.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:35:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 9,
+    "conversationId": 2,
+    "text": "That sounds perfect! Let me try that code now.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T09:40:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 5,
+    "Id": 10,
     "conversationId": 2,
-    "text": "That's wonderful to hear! Thank you for choosing us. If you need anything else, please don't hesitate to reach out.",
-    "mediaUrl": null,
-    "timestamp": "2024-01-15T09:42:00Z",
-    "isIncoming": false,
-    "status": "read"
-  },
-  {
-    "Id": 6,
-    "conversationId": 2,
-    "text": "Thank you for the quick response!",
+    "text": "Thank you for the quick response! The discount code SAVE20 worked perfectly. I'm very satisfied with the customer service.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T09:45:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 7,
+    "Id": 11,
     "conversationId": 3,
-    "text": "The technical issue has been resolved. Thank you for your patience!",
+    "text": "I need to request a refund for my recent purchase. The product doesn't meet my expectations.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:00:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 12,
+    "conversationId": 3,
+    "text": "I'm sorry to hear that, Emma. I'll be happy to help you with the refund process. Can you tell me what specifically didn't meet your expectations?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:05:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 13,
+    "conversationId": 3,
+    "text": "The software integration features aren't as robust as advertised. I need something more technical for my development work.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:10:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 14,
+    "conversationId": 3,
+    "text": "I understand completely. I've processed your refund for $89.99. You should see it in your account within 3-5 business days.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T08:15:00Z",
     "isIncoming": false,
     "status": "read"
   },
   {
-    "Id": 8,
+    "Id": 15,
     "conversationId": 3,
-    "text": "Perfect, issue resolved. Thanks!",
+    "text": "Perfect! The refund of $89.99 has been processed to my original payment method. Thank you for resolving this so quickly!",
     "mediaUrl": null,
     "timestamp": "2024-01-15T08:20:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 9,
+    "Id": 16,
     "conversationId": 4,
-    "text": "When will my product be delivered?",
+    "text": "Hello! When will my wireless headphones be delivered?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T11:00:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 17,
+    "conversationId": 4,
+    "text": "I ordered them 5 days ago and need them for this weekend's conference. Can you expedite shipping?",
     "mediaUrl": null,
     "timestamp": "2024-01-15T11:15:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 10,
+    "Id": 18,
     "conversationId": 5,
-    "text": "I placed an order last week but haven't received any updates",
+    "text": "I have a critical API integration issue that needs immediate attention",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T07:20:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 19,
+    "conversationId": 5,
+    "text": "I placed an order last week but haven't received any updates on the integration setup",
     "mediaUrl": null,
     "timestamp": "2024-01-15T07:25:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 11,
+    "Id": 20,
     "conversationId": 5,
-    "text": "Can someone please help me?",
+    "text": "Can someone from your technical team please help me? This is affecting my business operations.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T07:28:00Z",
     "isIncoming": true,
     "status": "delivered"
   },
   {
-    "Id": 12,
+    "Id": 21,
     "conversationId": 5,
-    "text": "I'm still waiting for an update",
+    "text": "I'm still waiting for an update on my API integration issue. This is affecting my business operations and I have clients waiting. Please escalate this to your technical team immediately.",
     "mediaUrl": null,
     "timestamp": "2024-01-15T07:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 22,
+    "conversationId": 6,
+    "text": "Hi, I'm interested in your enterprise solutions for our company",
+    "mediaUrl": null,
+    "timestamp": "2024-01-14T16:00:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 23,
+    "conversationId": 6,
+    "text": "We're a team of about 200 people and need something scalable",
+    "mediaUrl": null,
+    "timestamp": "2024-01-14T16:05:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 24,
+    "conversationId": 6,
+    "text": "Hello! I'd be happy to help you with our enterprise solutions. Let me send you some information about our scaling options and pricing.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-14T16:10:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 25,
+    "conversationId": 6,
+    "text": "Thanks for all the information about your enterprise plans. I'll discuss with my team and get back to you next week with our decision.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-14T18:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 26,
+    "conversationId": 7,
+    "text": "Hi! I just finished the demo call with your sales team and I'm very impressed!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T12:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 27,
+    "conversationId": 7,
+    "text": "The automation features are exactly what we need for our marketing campaigns",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T12:35:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 28,
+    "conversationId": 7,
+    "text": "That's fantastic to hear! I'm so glad the demo showcased exactly what you're looking for. What's the next step you'd like to take?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T12:40:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 29,
+    "conversationId": 7,
+    "text": "The demo went great! I'm ready to move forward with the Premium plan. Can you send me the contract and setup the onboarding call for this week?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T12:45:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 30,
+    "conversationId": 8,
+    "text": "Hi, I saw your ad on LinkedIn and I'm interested in your marketing automation features",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T13:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 31,
+    "conversationId": 8,
+    "text": "Can you tell me more about pricing for a 50-person team?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T13:35:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 32,
+    "conversationId": 9,
+    "text": "Hi Lisa! Hope you're doing well. Just wanted to follow up after yesterday's training session.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:20:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 33,
+    "conversationId": 9,
+    "text": "Thanks for the training session yesterday. The team is already seeing improvements in their workflow. We might need additional licenses next month.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 34,
+    "conversationId": 10,
+    "text": "URGENT: Our system is down and we can't access our dashboard",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T15:00:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 35,
+    "conversationId": 10,
+    "text": "This is a critical issue affecting our entire sales team",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T15:02:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 36,
+    "conversationId": 10,
+    "text": "URGENT: Our system is down and we can't access our dashboard. This is a critical issue affecting our entire sales team. Please call me immediately at the number provided.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T15:05:00Z",
     "isIncoming": true,
     "status": "delivered"
   }

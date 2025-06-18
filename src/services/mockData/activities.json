@@ -4,183 +4,424 @@
     "type": "call",
     "contactId": 1,
     "conversationId": 1,
-    "title": "Initial Contact Call",
-    "description": "First contact call to discuss product interest",
+    "title": "Urgent Order Issue Call",
+    "description": "Emergency call regarding delayed birthday gift order",
     "details": {
-      "duration": "12:45",
-      "outcome": "interested",
-      "notes": "Customer showed strong interest in premium package. Requested detailed pricing information and demo scheduling.",
-      "phoneNumber": "+1-555-0123"
+      "duration": "8:45",
+      "outcome": "issue_escalated",
+      "notes": "Customer's daughter's birthday gift is delayed. Escalated to shipping partner for immediate resolution. Offered expedited shipping at no charge.",
+      "phoneNumber": "+1234567890"
     },
-    "agent": "Sarah Wilson",
+    "agent": "Sarah Johnson",
     "priority": "high",
-    "timestamp": "2024-01-15T14:30:00Z",
-    "createdAt": "2024-01-15T14:30:00Z"
+    "timestamp": "2024-01-15T10:35:00Z",
+    "createdAt": "2024-01-15T10:35:00Z"
   },
   {
     "Id": 2,
     "type": "chat",
     "contactId": 1,
     "conversationId": 1,
-    "title": "WhatsApp Follow-up",
-    "description": "Follow-up chat session after initial call",
+    "title": "WhatsApp Order Support",
+    "description": "Ongoing WhatsApp conversation about order status and return policy",
     "details": {
       "platform": "whatsapp",
-      "messageCount": 12,
-      "duration": "25:30",
-      "resolved": true,
-      "summary": "Provided pricing details and scheduled demo for next week"
+      "messageCount": 5,
+      "duration": "12:30",
+      "resolved": false,
+      "summary": "Addressed urgent shipping issue and explained return policy. Customer satisfied with response time."
     },
-    "agent": "Sarah Wilson",
-    "priority": "medium",
-    "timestamp": "2024-01-15T10:15:00Z",
-    "createdAt": "2024-01-15T10:15:00Z"
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "createdAt": "2024-01-15T10:30:00Z"
   },
   {
     "Id": 3,
     "type": "note",
     "contactId": 1,
     "conversationId": 1,
-    "title": "Demo Preparation Notes",
-    "description": "Preparation notes for upcoming product demo",
+    "title": "VIP Customer Service Notes",
+    "description": "Special handling notes for VIP customer with urgent request",
     "details": {
-      "content": "Customer specifically interested in automation features and integration capabilities. Focus demo on workflow automation and API integrations. Has existing CRM system that needs integration.",
-      "category": "demo_prep",
-      "followUpDate": "2024-01-22T15:00:00Z",
+      "content": "Sarah Johnson is a VIP customer with high lifetime value. Daughter's birthday tomorrow - expedited shipping approved. Customer appreciates proactive communication and quick resolution.",
+      "category": "customer_service",
+      "followUpDate": "2024-01-16T09:00:00Z",
       "isFollowUpRequired": true
     },
-    "agent": "Sarah Wilson",
+    "agent": "Sarah Johnson",
     "priority": "high",
-    "timestamp": "2024-01-15T09:00:00Z",
-    "createdAt": "2024-01-15T09:00:00Z"
+    "timestamp": "2024-01-15T10:40:00Z",
+    "createdAt": "2024-01-15T10:40:00Z"
   },
   {
     "Id": 4,
-    "type": "ticket",
+    "type": "chat",
     "contactId": 2,
     "conversationId": 2,
-    "title": "Integration Support Request",
-    "description": "Customer needs help with API integration setup",
+    "title": "Discount Code Support",
+    "description": "Customer inquiry about pricing and discount application",
     "details": {
-      "ticketId": "TK-2024-001",
-      "category": "technical_support",
-      "status": "in_progress",
-      "priority": "high",
-      "resolution": "Working with development team on custom integration solution"
+      "platform": "website",
+      "messageCount": 5,
+      "duration": "15:20",
+      "resolved": true,
+      "summary": "Provided SAVE20 discount code for first-time customer. Code applied successfully and customer proceeded with purchase."
     },
-    "agent": "Mike Johnson",
-    "priority": "high",
-    "timestamp": "2024-01-14T16:45:00Z",
-    "createdAt": "2024-01-14T16:45:00Z"
+    "agent": "Mike Chen",
+    "priority": "medium",
+    "timestamp": "2024-01-15T09:45:00Z",
+    "createdAt": "2024-01-15T09:45:00Z"
   },
   {
     "Id": 5,
-    "type": "call",
+    "type": "note",
     "contactId": 2,
     "conversationId": 2,
-    "title": "Technical Consultation",
-    "description": "Technical consultation call for integration requirements",
+    "title": "New Customer Onboarding",
+    "description": "First-time customer successfully converted with discount",
     "details": {
-      "duration": "35:20",
-      "outcome": "requirements_gathered",
-      "notes": "Detailed technical requirements gathered. Customer needs custom webhook integration with Salesforce. Estimated 2-3 days development time.",
-      "phoneNumber": "+1-555-0456"
+      "content": "Michael Chen converted from lead to customer with 20% discount. Expressed satisfaction with customer service. Good candidate for future upselling and referral program.",
+      "category": "conversion",
+      "followUpDate": "2024-01-22T10:00:00Z",
+      "isFollowUpRequired": true
     },
-    "agent": "Mike Johnson",
-    "priority": "high",
-    "timestamp": "2024-01-14T11:30:00Z",
-    "createdAt": "2024-01-14T11:30:00Z"
+    "agent": "Mike Chen",
+    "priority": "medium",
+    "timestamp": "2024-01-15T09:50:00Z",
+    "createdAt": "2024-01-15T09:50:00Z"
   },
   {
     "Id": 6,
     "type": "chat",
     "contactId": 3,
     "conversationId": 3,
-    "title": "Billing Inquiry",
-    "description": "Customer inquiry about billing and subscription options",
+    "title": "Refund Request Processing",
+    "description": "Customer refund request for product not meeting technical requirements",
     "details": {
       "platform": "whatsapp",
-      "messageCount": 8,
-      "duration": "15:45",
+      "messageCount": 5,
+      "duration": "20:15",
       "resolved": true,
-      "summary": "Explained pricing plans and provided discount code for annual subscription"
+      "summary": "Processed $89.99 refund for software that didn't meet technical requirements. Customer appreciated quick resolution."
     },
-    "agent": "Emily Davis",
-    "priority": "medium",
-    "timestamp": "2024-01-13T13:20:00Z",
-    "createdAt": "2024-01-13T13:20:00Z"
+    "agent": "Sarah Johnson",
+    "priority": "low",
+    "timestamp": "2024-01-15T08:20:00Z",
+    "createdAt": "2024-01-15T08:20:00Z"
   },
   {
     "Id": 7,
     "type": "note",
     "contactId": 3,
     "conversationId": 3,
-    "title": "Discount Approval",
-    "description": "Approved 15% discount for annual subscription",
+    "title": "Product Feedback Collection",
+    "description": "Valuable feedback collected about product technical limitations",
     "details": {
-      "content": "Customer committed to annual subscription. Approved 15% discount (code: ANNUAL15). Follow up in 3 days if no response.",
-      "category": "pricing",
-      "followUpDate": "2024-01-16T10:00:00Z",
+      "content": "Emma Rodriguez provided detailed feedback about integration features not meeting developer needs. Forwarded to product team for enhancement consideration. Maintain relationship for future product launches.",
+      "category": "product_feedback",
+      "followUpDate": "2024-01-29T14:00:00Z",
       "isFollowUpRequired": true
     },
-    "agent": "Emily Davis",
+    "agent": "Sarah Johnson",
     "priority": "medium",
-    "timestamp": "2024-01-13T13:45:00Z",
-    "createdAt": "2024-01-13T13:45:00Z"
+    "timestamp": "2024-01-15T08:25:00Z",
+    "createdAt": "2024-01-15T08:25:00Z"
   },
   {
     "Id": 8,
-    "type": "call",
+    "type": "chat",
     "contactId": 4,
-    "conversationId": null,
-    "title": "Cold Outreach Call",
-    "description": "Initial cold outreach call to potential lead",
+    "conversationId": 4,
+    "title": "Delivery Inquiry",
+    "description": "Customer asking about wireless headphones delivery for conference",
     "details": {
-      "duration": "8:30",
-      "outcome": "no_answer",
-      "notes": "Left voicemail with brief introduction and value proposition. Will follow up with WhatsApp message.",
-      "phoneNumber": "+1-555-0789"
+      "platform": "facebook",
+      "messageCount": 2,
+      "duration": "5:30",
+      "resolved": false,
+      "summary": "Customer needs headphones for weekend conference. Checking expedited shipping options."
     },
-    "agent": "John Smith",
-    "priority": "low",
-    "timestamp": "2024-01-12T16:00:00Z",
-    "createdAt": "2024-01-12T16:00:00Z"
+    "agent": "Lisa Wang",
+    "priority": "medium",
+    "timestamp": "2024-01-15T11:15:00Z",
+    "createdAt": "2024-01-15T11:15:00Z"
   },
   {
     "Id": 9,
-    "type": "ticket",
-    "contactId": 1,
-    "conversationId": 1,
-    "title": "Feature Request",
-    "description": "Customer requested additional reporting features",
+    "type": "call",
+    "contactId": 4,
+    "conversationId": 4,
+    "title": "Expedited Shipping Coordination",
+    "description": "Call to arrange expedited shipping for time-sensitive order",
     "details": {
-      "ticketId": "TK-2024-002",
-      "category": "feature_request",
-      "status": "under_review",
-      "priority": "medium",
-      "resolution": "Forwarded to product team for evaluation"
+      "duration": "6:20",
+      "outcome": "expedited_arranged",
+      "notes": "Arranged next-day delivery for conference deadline. Customer agreed to expedited shipping fee. Order will arrive Friday morning.",
+      "phoneNumber": "+1234567893"
     },
-    "agent": "Sarah Wilson",
+    "agent": "Lisa Wang",
     "priority": "medium",
-    "timestamp": "2024-01-11T14:15:00Z",
-    "createdAt": "2024-01-11T14:15:00Z"
+    "timestamp": "2024-01-15T11:20:00Z",
+    "createdAt": "2024-01-15T11:20:00Z"
   },
   {
     "Id": 10,
-    "type": "note",
+    "type": "ticket",
     "contactId": 5,
-    "conversationId": null,
-    "title": "Lead Qualification Notes",
-    "description": "Initial lead qualification and scoring",
+    "conversationId": 5,
+    "title": "Critical API Integration Issue",
+    "description": "Business-critical API integration failure affecting operations",
     "details": {
-      "content": "High-value prospect from enterprise segment. Company size 500+ employees. Current pain points with existing solution. Strong budget authority. Schedule executive demo.",
+      "ticketId": "TK-2024-003",
+      "category": "technical_support",
+      "status": "escalated",
+      "priority": "critical",
+      "resolution": "Escalated to senior technical team. API integration issue identified and fix in progress."
+    },
+    "agent": "Mike Chen",
+    "priority": "high",
+    "timestamp": "2024-01-15T07:30:00Z",
+    "createdAt": "2024-01-15T07:30:00Z"
+  },
+  {
+    "Id": 11,
+    "type": "call",
+    "contactId": 5,
+    "conversationId": 5,
+    "title": "Emergency Technical Support",
+    "description": "Emergency call for business-critical system issue",
+    "details": {
+      "duration": "25:45",
+      "outcome": "escalated_to_engineering",
+      "notes": "Critical API integration issue affecting customer's business operations. Escalated to engineering team for immediate resolution. Customer has 4 clients waiting.",
+      "phoneNumber": "+1234567894"
+    },
+    "agent": "Mike Chen",
+    "priority": "high",
+    "timestamp": "2024-01-15T07:35:00Z",
+    "createdAt": "2024-01-15T07:35:00Z"
+  },
+  {
+    "Id": 12,
+    "type": "chat",
+    "contactId": 6,
+    "conversationId": 6,
+    "title": "Enterprise Solution Inquiry",
+    "description": "Initial inquiry about enterprise plans and pricing",
+    "details": {
+      "platform": "website",
+      "messageCount": 4,
+      "duration": "18:45",
+      "resolved": false,
+      "summary": "Discussed enterprise solutions for 200-person team. Sent pricing information and case studies."
+    },
+    "agent": "Lisa Wang",
+    "priority": "low",
+    "timestamp": "2024-01-14T18:30:00Z",
+    "createdAt": "2024-01-14T18:30:00Z"
+  },
+  {
+    "Id": 13,
+    "type": "note",
+    "contactId": 6,
+    "conversationId": 6,
+    "title": "Enterprise Lead Qualification",
+    "description": "Qualification notes for potential enterprise customer",
+    "details": {
+      "content": "Robert Wilson from consulting firm evaluating enterprise solutions. 200-person team, decision maker with budget authority. Sent enterprise package information and case studies. Follow up scheduled for next week.",
       "category": "qualification",
-      "followUpDate": "2024-01-17T14:00:00Z",
+      "followUpDate": "2024-01-22T14:00:00Z",
       "isFollowUpRequired": true
     },
-    "agent": "John Smith",
+    "agent": "Lisa Wang",
+    "priority": "medium",
+    "timestamp": "2024-01-14T19:00:00Z",
+    "createdAt": "2024-01-14T19:00:00Z"
+  },
+  {
+    "Id": 14,
+    "type": "call",
+    "contactId": 7,
+    "conversationId": 7,
+    "title": "Premium Plan Demo Follow-up",
+    "description": "Post-demo call to discuss Premium plan purchase",
+    "details": {
+      "duration": "15:30",
+      "outcome": "ready_to_purchase",
+      "notes": "Customer very impressed with demo, especially automation features. Ready to purchase Premium plan. Needs contract and onboarding scheduled this week.",
+      "phoneNumber": "+1234567896"
+    },
+    "agent": "Sarah Johnson",
     "priority": "high",
-    "timestamp": "2024-01-10T11:30:00Z",
-    "createdAt": "2024-01-10T11:30:00Z"
+    "timestamp": "2024-01-15T12:50:00Z",
+    "createdAt": "2024-01-15T12:50:00Z"
+  },
+  {
+    "Id": 15,
+    "type": "chat",
+    "contactId": 7,
+    "conversationId": 7,
+    "title": "Purchase Decision Confirmation",
+    "description": "Customer confirmed purchase decision for Premium plan",
+    "details": {
+      "platform": "whatsapp",
+      "messageCount": 4,
+      "duration": "8:20",
+      "resolved": false,
+      "summary": "Customer confirmed Premium plan purchase. Requesting contract and onboarding call this week."
+    },
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T12:45:00Z",
+    "createdAt": "2024-01-15T12:45:00Z"
+  },
+  {
+    "Id": 16,
+    "type": "note",
+    "contactId": 7,
+    "conversationId": 7,
+    "title": "Hot Lead Conversion",
+    "description": "High-value lead ready to convert to Premium plan",
+    "details": {
+      "content": "Jennifer Adams is ready to purchase Premium plan after successful demo. Marketing Director at growing agency, perfect target customer. Prepare contract and schedule onboarding call for this week.",
+      "category": "conversion",
+      "followUpDate": "2024-01-16T09:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T13:00:00Z",
+    "createdAt": "2024-01-15T13:00:00Z"
+  },
+  {
+    "Id": 17,
+    "type": "chat",
+    "contactId": 8,
+    "conversationId": 8,
+    "title": "LinkedIn Lead Initial Contact",
+    "description": "First contact with lead from LinkedIn marketing automation ad",
+    "details": {
+      "platform": "linkedin",
+      "messageCount": 2,
+      "duration": "3:15",
+      "resolved": false,
+      "summary": "New lead interested in marketing automation for 50-person team. Requesting pricing information."
+    },
+    "agent": "Mike Chen",
+    "priority": "medium",
+    "timestamp": "2024-01-15T13:35:00Z",
+    "createdAt": "2024-01-15T13:35:00Z"
+  },
+  {
+    "Id": 18,
+    "type": "note",
+    "contactId": 8,
+    "conversationId": 8,
+    "title": "LinkedIn Lead Qualification",
+    "description": "Initial qualification of LinkedIn marketing automation lead",
+    "details": {
+      "content": "Kevin Martinez from GrowthTech Solutions interested in marketing automation. 50-person team, growth manager role. Found us through LinkedIn ads. Budget-conscious but sees value in automation.",
+      "category": "qualification",
+      "followUpDate": "2024-01-16T14:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "Mike Chen",
+    "priority": "medium",
+    "timestamp": "2024-01-15T13:40:00Z",
+    "createdAt": "2024-01-15T13:40:00Z"
+  },
+  {
+    "Id": 19,
+    "type": "chat",
+    "contactId": 9,
+    "conversationId": 9,
+    "title": "Training Follow-up",
+    "description": "Post-training follow-up with existing customer",
+    "details": {
+      "platform": "email",
+      "messageCount": 2,
+      "duration": "5:45",
+      "resolved": true,
+      "summary": "Customer very satisfied with training. Team seeing improvements. Mentioned need for additional licenses next month."
+    },
+    "agent": "Lisa Wang",
+    "priority": "low",
+    "timestamp": "2024-01-15T08:30:00Z",
+    "createdAt": "2024-01-15T08:30:00Z"
+  },
+  {
+    "Id": 20,
+    "type": "note",
+    "contactId": 9,
+    "conversationId": 9,
+    "title": "Upselling Opportunity",
+    "description": "Identified expansion opportunity with existing customer",
+    "details": {
+      "content": "Amanda Taylor's team seeing great results post-training. Mentioned needing additional licenses next month. Excellent upselling opportunity. Schedule follow-up call to discuss expansion options.",
+      "category": "upselling",
+      "followUpDate": "2024-01-25T15:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "Lisa Wang",
+    "priority": "medium",
+    "timestamp": "2024-01-15T08:35:00Z",
+    "createdAt": "2024-01-15T08:35:00Z"
+  },
+  {
+    "Id": 21,
+    "type": "ticket",
+    "contactId": 10,
+    "conversationId": 10,
+    "title": "Critical System Outage",
+    "description": "Emergency ticket for dashboard system outage affecting sales team",
+    "details": {
+      "ticketId": "TK-2024-004",
+      "category": "system_outage",
+      "status": "critical_escalated",
+      "priority": "critical",
+      "resolution": "Engineering team immediately notified. System status page updated. Expected resolution within 1 hour."
+    },
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T15:05:00Z",
+    "createdAt": "2024-01-15T15:05:00Z"
+  },
+  {
+    "Id": 22,
+    "type": "call",
+    "contactId": 10,
+    "conversationId": 10,
+    "title": "Emergency System Outage Call",
+    "description": "Immediate response call for critical system outage",
+    "details": {
+      "duration": "12:20",
+      "outcome": "escalated_to_engineering",
+      "notes": "Critical dashboard outage affecting entire sales team. Engineering team activated, expected resolution within 1 hour. Customer updated on progress every 15 minutes.",
+      "phoneNumber": "+1234567899"
+    },
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T15:10:00Z",
+    "createdAt": "2024-01-15T15:10:00Z"
+  },
+  {
+    "Id": 23,
+    "type": "chat",
+    "contactId": 10,
+    "conversationId": 10,
+    "title": "System Outage Emergency Response",
+    "description": "Urgent WhatsApp response to system outage affecting sales operations",
+    "details": {
+      "platform": "whatsapp",
+      "messageCount": 3,
+      "duration": "2:30",
+      "resolved": false,
+      "summary": "Immediate acknowledgment of critical system issue. Engineering team notified and working on resolution."
+    },
+    "agent": "Sarah Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-15T15:05:00Z",
+    "createdAt": "2024-01-15T15:05:00Z"
   }
 ]

@@ -8,11 +8,11 @@
     "createdAt": "2024-01-15T08:00:00Z",
     "updatedAt": "2024-01-15T10:30:00Z",
     "unreadCount": 3,
-    "lastMessage": "Hi! I need urgent help with my order. It should have arrived yesterday but tracking shows no updates.",
+    "lastMessage": "Hi! I need urgent help with my order #ORD-2024-12345. It should have arrived yesterday but tracking shows no updates. This is for my daughter's birthday tomorrow!",
     "lastMessageTime": "2024-01-15T10:30:00Z",
     "channel": "whatsapp",
     "leadScore": 85,
-    "tags": ["urgent", "shipping-issue", "vip-customer"]
+    "tags": ["urgent", "shipping-issue", "vip-customer", "birthday-gift"]
   },
   {
     "Id": 2,
@@ -23,11 +23,11 @@
     "createdAt": "2024-01-15T07:00:00Z",
     "updatedAt": "2024-01-15T09:45:00Z",
     "unreadCount": 0,
-    "lastMessage": "Thank you for the quick response! The discount code worked perfectly.",
+    "lastMessage": "Thank you for the quick response! The discount code SAVE20 worked perfectly. I'm very satisfied with the customer service.",
     "lastMessageTime": "2024-01-15T09:45:00Z",
     "channel": "website",
     "leadScore": 72,
-    "tags": ["support", "discount", "satisfied"]
+    "tags": ["support", "discount", "satisfied", "repeat-customer"]
   },
   {
     "Id": 3,
@@ -38,11 +38,11 @@
     "createdAt": "2024-01-15T06:00:00Z",
     "updatedAt": "2024-01-15T08:20:00Z",
     "unreadCount": 0,
-    "lastMessage": "Perfect! The refund has been processed. Thank you for your help!",
+    "lastMessage": "Perfect! The refund of $89.99 has been processed to my original payment method. Thank you for resolving this so quickly!",
     "lastMessageTime": "2024-01-15T08:20:00Z",
     "channel": "whatsapp",
     "leadScore": 68,
-    "tags": ["refund", "resolved", "positive-feedback"]
+    "tags": ["refund", "resolved", "positive-feedback", "quick-resolution"]
   },
   {
     "Id": 4,
@@ -53,11 +53,11 @@
     "createdAt": "2024-01-15T11:00:00Z",
     "updatedAt": "2024-01-15T11:15:00Z",
     "unreadCount": 2,
-    "lastMessage": "When will my product be delivered? I ordered it 5 days ago and need it for this weekend.",
+    "lastMessage": "When will my wireless headphones be delivered? I ordered them 5 days ago and need them for this weekend's conference. Can you expedite shipping?",
     "lastMessageTime": "2024-01-15T11:15:00Z",
     "channel": "facebook",
     "leadScore": 45,
-    "tags": ["delivery-inquiry", "time-sensitive", "new-customer"]
+    "tags": ["delivery-inquiry", "time-sensitive", "new-customer", "expedited-shipping"]
   },
   {
     "Id": 5,
@@ -68,11 +68,11 @@
     "createdAt": "2024-01-15T05:30:00Z",
     "updatedAt": "2024-01-15T07:30:00Z",
     "unreadCount": 4,
-    "lastMessage": "I'm still waiting for an update on my technical issue. This is affecting my business operations.",
+    "lastMessage": "I'm still waiting for an update on my API integration issue. This is affecting my business operations and I have clients waiting. Please escalate this to your technical team immediately.",
     "lastMessageTime": "2024-01-15T07:30:00Z",
     "channel": "whatsapp",
     "leadScore": 92,
-    "tags": ["technical-support", "business-customer", "escalated"]
+    "tags": ["technical-support", "business-customer", "escalated", "api-integration"]
   },
   {
     "Id": 6,
@@ -83,10 +83,70 @@
     "createdAt": "2024-01-14T16:00:00Z",
     "updatedAt": "2024-01-14T18:30:00Z",
     "unreadCount": 0,
-    "lastMessage": "Thanks for all the information. I'll think about it and get back to you.",
+    "lastMessage": "Thanks for all the information about your enterprise plans. I'll discuss with my team and get back to you next week with our decision.",
     "lastMessageTime": "2024-01-14T18:30:00Z",
     "channel": "website",
     "leadScore": 35,
-    "tags": ["inquiry", "no-purchase", "follow-up-needed"]
+    "tags": ["inquiry", "enterprise", "follow-up-needed", "decision-pending"]
+  },
+  {
+    "Id": 7,
+    "contactId": 7,
+    "status": "ongoing",
+    "priority": "high",
+    "assignedTo": "Sarah Johnson",
+    "createdAt": "2024-01-14T14:20:00Z",
+    "updatedAt": "2024-01-15T12:45:00Z",
+    "unreadCount": 1,
+    "lastMessage": "The demo went great! I'm ready to move forward with the Premium plan. Can you send me the contract and setup the onboarding call for this week?",
+    "lastMessageTime": "2024-01-15T12:45:00Z",
+    "channel": "whatsapp",
+    "leadScore": 95,
+    "tags": ["hot-lead", "demo-completed", "ready-to-buy", "premium-plan"]
+  },
+  {
+    "Id": 8,
+    "contactId": 8,
+    "status": "new",
+    "priority": "medium",
+    "assignedTo": "Mike Chen",
+    "createdAt": "2024-01-15T13:30:00Z",
+    "updatedAt": "2024-01-15T13:35:00Z",
+    "unreadCount": 2,
+    "lastMessage": "Hi, I saw your ad on LinkedIn and I'm interested in your marketing automation features. Can you tell me more about pricing for a 50-person team?",
+    "lastMessageTime": "2024-01-15T13:35:00Z",
+    "channel": "linkedin",
+    "leadScore": 58,
+    "tags": ["linkedin-lead", "marketing-automation", "team-plan", "pricing-inquiry"]
+  },
+  {
+    "Id": 9,
+    "contactId": 9,
+    "status": "ongoing",
+    "priority": "low",
+    "assignedTo": "Lisa Wang",
+    "createdAt": "2024-01-14T10:15:00Z",
+    "updatedAt": "2024-01-15T08:30:00Z",
+    "unreadCount": 0,
+    "lastMessage": "Thanks for the training session yesterday. The team is already seeing improvements in their workflow. We might need additional licenses next month.",
+    "lastMessageTime": "2024-01-15T08:30:00Z",
+    "channel": "email",
+    "leadScore": 88,
+    "tags": ["existing-customer", "training-completed", "upsell-opportunity", "expansion"]
+  },
+  {
+    "Id": 10,
+    "contactId": 10,
+    "status": "new",
+    "priority": "high",
+    "assignedTo": "Sarah Johnson",
+    "createdAt": "2024-01-15T15:00:00Z",
+    "updatedAt": "2024-01-15T15:05:00Z",
+    "unreadCount": 3,
+    "lastMessage": "URGENT: Our system is down and we can't access our dashboard. This is a critical issue affecting our entire sales team. Please call me immediately at the number provided.",
+    "lastMessageTime": "2024-01-15T15:05:00Z",
+    "channel": "whatsapp",
+    "leadScore": 78,
+    "tags": ["system-down", "critical", "immediate-attention", "sales-team-affected"]
   }
 ]
