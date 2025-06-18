@@ -9,11 +9,19 @@ const SearchBar = ({
   onFilter,
   showFilters = false,
   className = '',
+  teamMembers = [],
+  filters = {},
   ...props 
 }) => {
-  const [searchQuery, setSearchQuery] = useState('')
+const [searchQuery, setSearchQuery] = useState('')
   const [showFilterPanel, setShowFilterPanel] = useState(false)
-
+  const [localFilters, setLocalFilters] = useState({
+    status: '',
+    agent: '',
+    tags: '',
+    dateRange: '',
+    priority: ''
+  })
   const handleSearch = (e) => {
     const query = e.target.value
     setSearchQuery(query)
@@ -29,10 +37,34 @@ const SearchBar = ({
     }
   }
 
-  const toggleFilters = () => {
+const toggleFilters = () => {
     setShowFilterPanel(!showFilterPanel)
   }
 
+  const handleFilterChange = (key, value) => {
+    setLocalFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const applyFilters = () => {
+    if (onFilter) {
+      onFilter(localFilters)
+    }
+    setShowFilterPanel(false)
+  }
+
+  const clearFilters = () => {
+    const clearedFilters = {
+      status: '',
+      agent: '',
+      tags: '',
+      dateRange: '',
+      priority: ''
+    }
+    setLocalFilters(clearedFilters)
+    if (onFilter) {
+      onFilter(clearedFilters)
+    }
+  }
   return (
     <div className={`relative ${className}`}>
       <div className="flex items-center gap-2">
@@ -71,56 +103,106 @@ const SearchBar = ({
       </div>
 
       {/* Filter Panel */}
-      {showFilterPanel && showFilters && (
+{showFilterPanel && showFilters && (
         <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-white border border-surface-200 rounded-lg shadow-lg z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-surface-700 mb-2">
-                Status
+                Lead Status
               </label>
-              <select className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20">
+              <select 
+                className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={localFilters.status}
+                onChange={(e) => handleFilterChange('status', e.target.value)}
+              >
                 <option value="">All Status</option>
                 <option value="new">New</option>
-                <option value="ongoing">Ongoing</option>
-                <option value="resolved">Resolved</option>
+                <option value="contacted">Contacted</option>
+                <option value="qualified">Qualified</option>
+                <option value="proposal">Proposal</option>
+                <option value="closed">Closed</option>
+                <option value="lost">Lost</option>
               </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-surface-700 mb-2">
+                Priority
+              </label>
+              <select 
+                className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={localFilters.priority}
+                onChange={(e) => handleFilterChange('priority', e.target.value)}
+              >
+                <option value="">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-surface-700 mb-2">
+                Assigned Agent
+              </label>
+              <select 
+                className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={localFilters.agent}
+                onChange={(e) => handleFilterChange('agent', e.target.value)}
+              >
+                <option value="">All Agents</option>
+                <option value="">Unassigned</option>
+                {teamMembers.map(member => (
+                  <option key={member.Id} value={member.name}>
+                    {member.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-surface-700 mb-2">
+                Tags
+              </label>
+              <input
+                type="text"
+                placeholder="Filter by tags..."
+                className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={localFilters.tags}
+                onChange={(e) => handleFilterChange('tags', e.target.value)}
+              />
             </div>
             
             <div>
               <label className="block text-sm font-medium text-surface-700 mb-2">
                 Date Range
               </label>
-              <select className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20">
+              <select 
+                className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={localFilters.dateRange}
+                onChange={(e) => handleFilterChange('dateRange', e.target.value)}
+              >
                 <option value="">All Time</option>
                 <option value="today">Today</option>
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-surface-700 mb-2">
-                Assigned To
-              </label>
-              <select className="w-full p-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20">
-                <option value="">All Agents</option>
-                <option value="agent1">Agent 1</option>
-                <option value="agent2">Agent 2</option>
-                <option value="agent3">Agent 3</option>
+                <option value="quarter">This Quarter</option>
               </select>
             </div>
           </div>
           
-          <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-surface-200">
-            <Button variant="ghost" size="sm" onClick={toggleFilters}>
-              Cancel
+          <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-surface-200">
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              Clear All
             </Button>
-            <Button variant="primary" size="sm" onClick={() => {
-              if (onFilter) onFilter()
-              toggleFilters()
-            }}>
-              Apply Filters
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={toggleFilters}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={applyFilters}>
+                Apply Filters
+              </Button>
+            </div>
           </div>
         </div>
       )}
