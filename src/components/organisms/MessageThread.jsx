@@ -11,14 +11,18 @@ import ErrorState from '@/components/organisms/ErrorState'
 import ApperIcon from '@/components/ApperIcon'
 import { toast } from 'react-toastify'
 
-const MessageThread = ({ conversation, onStatusChange }) => {
+const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLeadPanel }) => {
   const [messages, setMessages] = useState([])
   const [contact, setContact] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [attachments, setAttachments] = useState([])
   const messagesEndRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     if (conversation) {
@@ -183,12 +187,12 @@ const MessageThread = ({ conversation, onStatusChange }) => {
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+<div className="flex items-center gap-2">
             <Badge variant={getStatusVariant(conversation.status)}>
               {conversation.status}
             </Badge>
             
-            {/* Status Actions */}
+            {/* Header Actions */}
             <div className="flex items-center gap-1 ml-2">
               {conversation.status !== 'resolved' && (
                 <Button
@@ -210,6 +214,20 @@ const MessageThread = ({ conversation, onStatusChange }) => {
                   Reopen
                 </Button>
               )}
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="User"
+                onClick={onShowLeadDetails}
+                className="xl:hidden"
+              >
+                Lead Details
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="MoreVertical"
+              />
             </div>
           </div>
         </div>
@@ -239,25 +257,85 @@ const MessageThread = ({ conversation, onStatusChange }) => {
         <div ref={messagesEndRef} />
       </div>
 
+{/* Typing Indicator */}
+      {isTyping && (
+        <div className="px-4 py-2 border-t border-surface-200 bg-surface-50">
+          <div className="flex items-center gap-2 text-sm text-surface-600">
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            </div>
+            <span>{contact?.name} is typing...</span>
+          </div>
+        </div>
+      )}
+
       {/* Message Input */}
       <div className="p-4 border-t border-surface-200 bg-white">
-        <form onSubmit={handleSendMessage} className="flex items-end gap-3">
-          <div className="flex-1">
-            <Input
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              disabled={sending}
-            />
+        {/* Attachment Preview */}
+        {attachments.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {attachments.map((attachment, index) => (
+              <div key={index} className="relative bg-surface-100 rounded-lg p-2 flex items-center gap-2">
+                <ApperIcon name="File" size={16} className="text-surface-600" />
+                <span className="text-sm text-surface-700">{attachment.name}</span>
+                <button
+                  onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
+                  className="text-surface-400 hover:text-surface-600"
+                >
+                  <ApperIcon name="X" size={14} />
+                </button>
+              </div>
+            ))}
           </div>
-          
-          <div className="flex items-center gap-2">
+        )}
+
+        <form onSubmit={handleSendMessage} className="space-y-3">
+          {/* Quick Actions Bar */}
+          <div className="flex items-center gap-2 pb-2 border-b border-surface-100">
             <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              icon="Smile"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            />
+            <Button
+              type="button"
               variant="ghost"
               size="sm"
               icon="Paperclip"
+              onClick={() => fileInputRef.current?.click()}
               disabled={sending}
             />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              icon="MessageSquareText"
+              disabled={sending}
+            >
+              Templates
+            </Button>
+            <div className="flex-1"></div>
+            <span className="text-xs text-surface-400">
+              {newMessage.length}/1000
+            </span>
+          </div>
+
+          {/* Message Input Row */}
+          <div className="flex items-end gap-3">
+            <div className="flex-1">
+              <Input
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                disabled={sending}
+                maxLength={1000}
+              />
+            </div>
+            
             <Button
               variant="primary"
               size="sm"
@@ -270,6 +348,19 @@ const MessageThread = ({ conversation, onStatusChange }) => {
             </Button>
           </div>
         </form>
+
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="image/*,video/*,.pdf,.doc,.docx"
+          onChange={(e) => {
+            const files = Array.from(e.target.files)
+            setAttachments(prev => [...prev, ...files])
+          }}
+          className="hidden"
+        />
       </div>
     </div>
   )

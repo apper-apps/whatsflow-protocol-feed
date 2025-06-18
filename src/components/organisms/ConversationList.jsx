@@ -122,23 +122,40 @@ const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
     )
   }
 
-  return (
-    <div className="h-full flex flex-col bg-white border-r border-surface-200">
+return (
+    <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="p-4 border-b border-surface-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-surface-900">Conversations</h2>
+          <h2 className="text-lg font-semibold text-surface-900">CRM Inbox</h2>
           <div className="flex items-center gap-2">
             <span className="text-sm text-surface-500">{filteredConversations.length}</span>
           </div>
         </div>
+        
+        {/* Search Bar */}
         <SearchBar
           placeholder="Search conversations..."
           onSearch={handleSearch}
-          showFilters={true}
+          showFilters={false}
         />
+        
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-1 mt-3 bg-surface-100 p-1 rounded-lg">
+          <button className="flex-1 py-2 px-3 text-sm font-medium text-white bg-primary rounded-md transition-colors">
+            All
+          </button>
+          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+            Unread
+          </button>
+          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+            Assigned
+          </button>
+          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+            Closed
+          </button>
+        </div>
       </div>
-
 {/* Conversation List */}
       <div className="flex-1 overflow-y-auto">
         <AnimatePresence>

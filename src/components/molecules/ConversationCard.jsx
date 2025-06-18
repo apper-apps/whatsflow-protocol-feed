@@ -11,11 +11,12 @@ const ConversationCard = ({
   onClick,
   ...props 
 }) => {
-  const getStatusVariant = (status) => {
+const getStatusVariant = (status) => {
     switch (status) {
       case 'new': return 'error'
-      case 'ongoing': return 'warning'
+      case 'ongoing': return 'warning' 
       case 'resolved': return 'success'
+      case 'closed': return 'default'
       default: return 'default'
     }
   }
@@ -25,7 +26,18 @@ const ConversationCard = ({
       case 'new': return 'AlertCircle'
       case 'ongoing': return 'Clock'
       case 'resolved': return 'CheckCircle'
+      case 'closed': return 'Archive'
       default: return 'Circle'
+    }
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'new': return 'bg-red-500'
+      case 'ongoing': return 'bg-yellow-500'
+      case 'resolved': return 'bg-green-500'
+      case 'closed': return 'bg-gray-500'
+      default: return 'bg-gray-400'
     }
   }
 
@@ -37,12 +49,12 @@ const ConversationCard = ({
     }
   }
 
-  return (
+return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`p-4 border-b border-surface-200 cursor-pointer transition-all duration-150 ${
+      className={`p-4 border-b border-surface-200 cursor-pointer transition-all duration-150 relative ${
         isActive 
           ? 'bg-primary/5 border-l-4 border-l-primary' 
           : 'hover:bg-surface-50'
@@ -50,12 +62,17 @@ const ConversationCard = ({
       {...props}
     >
       <div className="flex items-start gap-3">
-        {/* Avatar */}
-        <Avatar 
-          name={contact?.name} 
-          online={conversation?.status === 'ongoing'}
-          size="md"
-        />
+        {/* Status Indicator */}
+        <div className="relative">
+          <Avatar 
+            name={contact?.name} 
+            online={conversation?.status === 'ongoing'}
+            size="md"
+          />
+          <div 
+            className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(conversation?.status)}`}
+          />
+        </div>
         
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -65,10 +82,10 @@ const ConversationCard = ({
               {contact?.name || 'Unknown Contact'}
             </h3>
             <div className="flex items-center gap-2 flex-shrink-0">
-              {conversation?.unreadCount > 0 && (
-                <Badge variant="primary" size="sm">
-                  {conversation.unreadCount}
-                </Badge>
+{conversation?.unreadCount > 0 && (
+                <div className="bg-primary text-white text-xs font-medium px-2 py-1 rounded-full min-w-[20px] h-5 flex items-center justify-center">
+                  {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
+                </div>
               )}
               <span className="text-xs text-surface-500">
                 {formatTime(conversation?.lastMessageTime)}

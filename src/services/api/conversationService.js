@@ -55,7 +55,7 @@ class ConversationService {
     return true
   }
 
-  async getByStatus(status) {
+async getByStatus(status) {
     await delay(250)
     return this.conversations.filter(c => c.status === status).map(c => ({...c}))
   }
@@ -63,6 +63,32 @@ class ConversationService {
   async updateStatus(id, status) {
     await delay(200)
     return this.update(id, { status })
+  }
+
+  async assignAgent(id, agentName) {
+    await delay(200)
+    return this.update(id, { assignedTo: agentName })
+  }
+
+  async addActivity(conversationId, activity) {
+    await delay(200)
+    const conversation = this.conversations.find(c => c.Id === parseInt(conversationId, 10))
+    if (!conversation) return null
+    
+    if (!conversation.activities) conversation.activities = []
+    conversation.activities.push({
+      ...activity,
+      id: Date.now(),
+      timestamp: new Date().toISOString()
+    })
+    
+    return {...conversation}
+  }
+
+  async getActivities(conversationId) {
+    await delay(200)
+    const conversation = this.conversations.find(c => c.Id === parseInt(conversationId, 10))
+    return conversation?.activities || []
   }
 }
 
