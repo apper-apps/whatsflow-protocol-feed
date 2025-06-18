@@ -18,12 +18,14 @@ class TemplateService {
     return template ? {...template} : null
   }
 
-  async create(templateData) {
+async create(templateData) {
     await delay(400)
     const maxId = Math.max(...this.templates.map(t => t.Id), 0)
     const newTemplate = {
       ...templateData,
-      Id: maxId + 1
+      Id: maxId + 1,
+      status: 'PENDING',
+      createdAt: new Date().toISOString()
     }
     this.templates.push(newTemplate)
     return {...newTemplate}

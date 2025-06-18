@@ -1,37 +1,110 @@
 [
   {
     "Id": 1,
-    "name": "Welcome New Customer",
-    "content": "Hi {{name}}! Welcome to our service. We're excited to have you on board. If you have any questions, feel free to ask!",
-    "category": "Greeting",
-    "variables": ["name"]
+    "name": "welcome_new_customer",
+    "category": "UTILITY",
+    "language": "en",
+    "components": [
+      {
+        "type": "HEADER",
+        "format": "TEXT",
+        "text": "Welcome to WhatsFlow!"
+      },
+      {
+        "type": "BODY",
+        "text": "Hi {{1}}! Welcome to our service. We're excited to have you on board. If you have any questions, feel free to ask!",
+        "example": { "body_text": [["John"]] }
+      },
+      {
+        "type": "FOOTER",
+        "text": "Powered by WhatsFlow CRM"
+      }
+    ],
+    "variables": [1],
+    "status": "APPROVED",
+    "content": "Hi {{1}}! Welcome to our service. We're excited to have you on board. If you have any questions, feel free to ask!",
+    "type": "text"
   },
   {
     "Id": 2,
-    "name": "Order Confirmation",
-    "content": "Thank you for your order #{{orderNumber}}! Your order total is ${{amount}} and it will be processed within 24 hours.",
-    "category": "Orders",
-    "variables": ["orderNumber", "amount"]
+    "name": "order_confirmation",
+    "category": "UTILITY",
+    "language": "en",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "Thank you for your order #{{1}}! Your order total is ${{2}} and it will be processed within 24 hours.",
+        "example": { "body_text": [["ORD123", "99.99"]] }
+      }
+    ],
+    "variables": [1, 2],
+    "status": "APPROVED",
+    "content": "Thank you for your order #{{1}}! Your order total is ${{2}} and it will be processed within 24 hours.",
+    "type": "text"
   },
   {
     "Id": 3,
-    "name": "Shipping Update",
-    "content": "Great news {{name}}! Your order #{{orderNumber}} has been shipped and should arrive by {{deliveryDate}}. Tracking: {{trackingNumber}}",
-    "category": "Shipping",
-    "variables": ["name", "orderNumber", "deliveryDate", "trackingNumber"]
+    "name": "shipping_update",
+    "category": "UTILITY",
+    "language": "en",
+    "components": [
+      {
+        "type": "HEADER",
+        "format": "TEXT",
+        "text": "Shipping Update"
+      },
+      {
+        "type": "BODY",
+        "text": "Great news {{1}}! Your order #{{2}} has been shipped and should arrive by {{3}}. Tracking: {{4}}",
+        "example": { "body_text": [["John", "ORD123", "Dec 25", "TRK456"]] }
+      }
+    ],
+    "variables": [1, 2, 3, 4],
+    "status": "APPROVED",
+    "content": "Great news {{1}}! Your order #{{2}} has been shipped and should arrive by {{3}}. Tracking: {{4}}",
+    "type": "text"
   },
   {
     "Id": 4,
-    "name": "Support Follow-up",
-    "content": "Hi {{name}}, I wanted to follow up on our previous conversation. Has your issue been resolved? Please let me know if you need any additional assistance.",
-    "category": "Support",
-    "variables": ["name"]
+    "name": "support_followup",
+    "category": "UTILITY",
+    "language": "en",
+    "components": [
+      {
+        "type": "BODY",
+        "text": "Hi {{1}}, I wanted to follow up on our previous conversation. Has your issue been resolved? Please let me know if you need any additional assistance.",
+        "example": { "body_text": [["John"]] }
+      }
+    ],
+    "variables": [1],
+    "status": "APPROVED",
+    "content": "Hi {{1}}, I wanted to follow up on our previous conversation. Has your issue been resolved? Please let me know if you need any additional assistance.",
+    "type": "text"
   },
   {
     "Id": 5,
-    "name": "Promotional Offer",
-    "content": "Hi {{name}}! We have a special {{discount}}% discount on {{product}} just for you. Use code {{promoCode}} at checkout. Valid until {{expiryDate}}.",
-    "category": "Marketing",
-    "variables": ["name", "discount", "product", "promoCode", "expiryDate"]
+    "name": "promotional_offer",
+    "category": "MARKETING",
+    "language": "en",
+    "components": [
+      {
+        "type": "HEADER",
+        "format": "IMAGE",
+        "example": { "header_url": ["https://example.com/promo.jpg"] }
+      },
+      {
+        "type": "BODY",
+        "text": "Hi {{1}}! We have a special {{2}}% discount on {{3}} just for you. Use code {{4}} at checkout. Valid until {{5}}.",
+        "example": { "body_text": [["John", "20", "Premium Package", "SAVE20", "Dec 31"]] }
+      },
+      {
+        "type": "FOOTER",
+        "text": "Terms and conditions apply"
+      }
+    ],
+    "variables": [1, 2, 3, 4, 5],
+    "status": "APPROVED",
+    "content": "Hi {{1}}! We have a special {{2}}% discount on {{3}} just for you. Use code {{4}} at checkout. Valid until {{5}}.",
+    "type": "text"
   }
 ]
