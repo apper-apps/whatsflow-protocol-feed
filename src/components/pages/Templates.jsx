@@ -161,10 +161,14 @@ const Templates = () => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-semibold text-surface-900">Templates</h1>
+<h1 className="text-2xl font-semibold text-surface-900">Templates</h1>
             <p className="text-surface-600">Manage your message templates</p>
           </div>
-          <Button variant="primary" icon="Plus">
+          <Button 
+            variant="primary" 
+            icon="Plus"
+            onClick={() => window.location.href = '/templates/create'}
+          >
             Create Template
           </Button>
         </div>
@@ -207,12 +211,12 @@ const Templates = () => {
       </div>
 
       {/* Content */}
-      {templates.length === 0 ? (
+{templates.length === 0 ? (
         <EmptyState 
           title="No templates yet"
           description="Create your first message template to save time"
           actionLabel="Create Template"
-          onAction={() => toast.info('Create template functionality coming soon')}
+          onAction={() => window.location.href = '/templates/create'}
           icon="FileText"
         />
       ) : filteredTemplates.length === 0 ? (

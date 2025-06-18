@@ -1,6 +1,7 @@
 import Inbox from '@/components/pages/Inbox';
 import Contacts from '@/components/pages/Contacts';
 import Templates from '@/components/pages/Templates';
+import CreateTemplate from '@/components/pages/CreateTemplate';
 import Analytics from '@/components/pages/Analytics';
 import Users from '@/components/pages/Users';
 import Billing from '@/components/pages/Billing';
@@ -21,12 +22,20 @@ export const routes = {
     icon: 'Users',
     component: Contacts
   },
-  templates: {
+templates: {
     id: 'templates',
     label: 'Templates',
     path: '/templates',
     icon: 'FileText',
     component: Templates
+  },
+  createTemplate: {
+    id: 'createTemplate',
+    label: 'Create Template',
+    path: '/templates/create',
+    icon: 'Plus',
+    component: CreateTemplate,
+    hidden: true
   },
   analytics: {
     id: 'analytics',

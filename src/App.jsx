@@ -4,6 +4,7 @@ import Layout from './Layout'
 import Inbox from '@/components/pages/Inbox'
 import Contacts from '@/components/pages/Contacts'
 import Templates from '@/components/pages/Templates'
+import CreateTemplate from '@/components/pages/CreateTemplate'
 import Analytics from '@/components/pages/Analytics'
 import Settings from '@/components/pages/Settings'
 import Users from '@/components/pages/Users'
@@ -17,10 +18,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Inbox />} />
-            <Route path="inbox" element={<Inbox />} />
+<Route path="inbox" element={<Inbox />} />
             <Route path="contacts" element={<Contacts />} />
             <Route path="templates" element={<Templates />} />
-<Route path="analytics" element={<Analytics />} />
+            <Route path="templates/create" element={<CreateTemplate />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="users" element={<Users />} />
             <Route path="billing" element={<Billing />} />
             <Route path="admin" element={<Admin />} />
