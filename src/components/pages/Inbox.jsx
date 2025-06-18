@@ -1,11 +1,35 @@
 import React, { useState } from 'react';
 import ConversationList from '@/components/organisms/ConversationList';
+import MessageThread from '@/components/organisms/MessageThread';
+import LeadDetailsPanel from '@/components/organisms/LeadDetailsPanel';
+import { conversationService } from '@/services';
+import { toast } from 'react-toastify';
 
 const Inbox = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [showLeadPanel, setShowLeadPanel] = useState(false);
 
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
+    setShowLeadPanel(false); // Reset lead panel when switching conversations
+  };
+
+  const handleStatusChange = async (conversationId, newStatus) => {
+    try {
+      const updatedConversation = await conversationService.updateStatus(conversationId, newStatus);
+      if (updatedConversation && selectedConversation?.Id === conversationId) {
+        setSelectedConversation(updatedConversation);
+      }
+      return updatedConversation;
+    } catch (error) {
+      console.error('Failed to update conversation status:', error);
+      toast.error('Failed to update conversation status');
+      throw error;
+    }
+  };
+
+  const handleShowLeadDetails = () => {
+    setShowLeadPanel(true);
   };
 
   return (
@@ -24,14 +48,25 @@ const Inbox = () => {
           />
         </div>
         
-        {/* Message Area */}
-        <div className="flex-1 bg-gray-50">
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <p>Select a conversation to start messaging</p>
-            </div>
-          </div>
+        {/* Message Thread */}
+        <div className={`${showLeadPanel ? 'flex-1' : 'flex-1'} border-r border-gray-200`}>
+          <MessageThread
+            conversation={selectedConversation}
+            onStatusChange={handleStatusChange}
+            onShowLeadDetails={handleShowLeadDetails}
+            showLeadPanel={showLeadPanel}
+          />
         </div>
+
+        {/* Lead Details Panel */}
+        {showLeadPanel && selectedConversation && (
+          <div className="w-80 bg-white">
+            <LeadDetailsPanel
+              conversation={selectedConversation}
+              onClose={() => setShowLeadPanel(false)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
