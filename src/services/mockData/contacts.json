@@ -1,5 +1,5 @@
 [
-  {
+{
     "Id": 1,
     "phone": "+1234567890",
     "name": "Sarah Johnson",
@@ -7,9 +7,13 @@
     "notes": "Frequent buyer, prefers email communication for follow-ups",
     "createdAt": "2024-01-10T14:20:00Z",
     "lastMessageAt": "2024-01-15T10:30:00Z",
-    "avatar": "SJ"
+    "avatar": "SJ",
+    "leadStatus": "qualified",
+    "priority": "high",
+    "assignedTo": "Sarah Wilson",
+    "pipelineStage": "negotiation"
   },
-  {
+{
     "Id": 2,
     "phone": "+1234567891",
     "name": "Michael Chen",
@@ -17,9 +21,13 @@
     "notes": "First-time buyer, interested in tech products",
     "createdAt": "2024-01-12T16:45:00Z",
     "lastMessageAt": "2024-01-15T09:45:00Z",
-    "avatar": "MC"
+    "avatar": "MC",
+    "leadStatus": "contacted",
+    "priority": "medium",
+    "assignedTo": "John Smith",
+    "pipelineStage": "qualification"
   },
-  {
+{
     "Id": 3,
     "phone": "+1234567892",
     "name": "Emma Rodriguez",
@@ -27,9 +35,13 @@
     "notes": "Software developer, usually needs technical assistance",
     "createdAt": "2024-01-08T11:30:00Z",
     "lastMessageAt": "2024-01-15T08:20:00Z",
-    "avatar": "ER"
+    "avatar": "ER",
+    "leadStatus": "qualified",
+    "priority": "medium",
+    "assignedTo": "Mike Johnson",
+    "pipelineStage": "proposal"
   },
-  {
+{
     "Id": 4,
     "phone": "+1234567893",
     "name": "David Thompson",
@@ -37,9 +49,13 @@
     "notes": "Bulk order customer, negotiates pricing frequently",
     "createdAt": "2024-01-14T09:15:00Z",
     "lastMessageAt": "2024-01-15T11:15:00Z",
-    "avatar": "DT"
+    "avatar": "DT",
+    "leadStatus": "proposal",
+    "priority": "high",
+    "assignedTo": "Sarah Wilson",
+    "pipelineStage": "negotiation"
   },
-  {
+{
     "Id": 5,
     "phone": "+1234567894",
     "name": "Lisa Park",
@@ -47,6 +63,10 @@
     "notes": "Responds well to promotional offers, loyal customer",
     "createdAt": "2024-01-05T13:40:00Z",
     "lastMessageAt": "2024-01-15T07:30:00Z",
-    "avatar": "LP"
+    "avatar": "LP",
+    "leadStatus": "closed",
+    "priority": "low",
+    "assignedTo": "Emily Davis",
+    "pipelineStage": "closed-won"
   }
 ]

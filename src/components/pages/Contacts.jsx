@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { contactService } from '@/services'
 import ContactCard from '@/components/molecules/ContactCard'
+import ContactModal from '@/components/molecules/ContactModal'
 import SearchBar from '@/components/molecules/SearchBar'
 import Button from '@/components/atoms/Button'
 import SkeletonLoader from '@/components/atoms/SkeletonLoader'
@@ -16,9 +17,13 @@ const Contacts = () => {
   const [error, setError] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState('grid') // 'grid' or 'list'
+  const [showContactModal, setShowContactModal] = useState(false)
+  const [editingContact, setEditingContact] = useState(null)
+  const [teamMembers, setTeamMembers] = useState([])
 
-  useEffect(() => {
+useEffect(() => {
     loadContacts()
+    loadTeamMembers()
   }, [])
 
   useEffect(() => {
@@ -60,10 +65,43 @@ const Contacts = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query)
+}
+
+  const loadTeamMembers = async () => {
+    try {
+      const members = await contactService.getTeamMembers()
+      setTeamMembers(members)
+    } catch (err) {
+      console.error('Failed to load team members:', err)
+    }
   }
 
   const handleEdit = (contact) => {
-    toast.info('Edit contact functionality coming soon')
+    setEditingContact(contact)
+    setShowContactModal(true)
+  }
+
+  const handleAddContact = () => {
+    setEditingContact(null)
+    setShowContactModal(true)
+  }
+
+  const handleSaveContact = async (contactData) => {
+    try {
+      if (editingContact) {
+        const updatedContact = await contactService.update(editingContact.Id, contactData)
+        setContacts(prev => prev.map(c => c.Id === editingContact.Id ? updatedContact : c))
+        toast.success('Contact updated successfully')
+      } else {
+        const newContact = await contactService.create(contactData)
+        setContacts(prev => [...prev, newContact])
+        toast.success('Contact created successfully')
+      }
+      setShowContactModal(false)
+      setEditingContact(null)
+    } catch (err) {
+      toast.error(editingContact ? 'Failed to update contact' : 'Failed to create contact')
+    }
   }
 
   const handleDelete = async (contact) => {
@@ -149,7 +187,7 @@ const Contacts = () => {
             <h1 className="text-2xl font-semibold text-surface-900">Contacts</h1>
             <p className="text-surface-600">Manage your customer contacts</p>
           </div>
-          <Button variant="primary" icon="Plus">
+<Button variant="primary" icon="Plus" onClick={handleAddContact}>
             Add Contact
           </Button>
         </div>
@@ -201,9 +239,9 @@ const Contacts = () => {
         <EmptyState 
           title="No contacts yet"
           description="Add your first contact to start managing customer relationships"
+description="Add your first contact to start managing customer relationships"
           actionLabel="Add Contact"
-          onAction={() => toast.info('Add contact functionality coming soon')}
-          icon="Users"
+          onAction={handleAddContact}
         />
       ) : filteredContacts.length === 0 ? (
         <EmptyState 
@@ -237,8 +275,20 @@ const Contacts = () => {
               </motion.div>
             ))}
           </AnimatePresence>
-        </div>
+</div>
       )}
+
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={showContactModal}
+        onClose={() => {
+          setShowContactModal(false)
+          setEditingContact(null)
+        }}
+        onSave={handleSaveContact}
+        contact={editingContact}
+        teamMembers={teamMembers}
+      />
     </motion.div>
   )
 }

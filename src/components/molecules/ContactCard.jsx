@@ -61,6 +61,33 @@ const ContactCard = ({ contact, onEdit, onDelete, onViewConversations, ...props 
           />
         </div>
       </div>
+)}
+
+      {/* CRM Status */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Badge 
+            variant={contact?.leadStatus === 'qualified' ? 'success' : contact?.leadStatus === 'contacted' ? 'warning' : 'secondary'} 
+            size="sm"
+          >
+            {contact?.leadStatus || 'new'}
+          </Badge>
+          {contact?.priority && (
+            <Badge 
+              variant={contact.priority === 'high' ? 'error' : contact.priority === 'medium' ? 'warning' : 'secondary'} 
+              size="sm"
+            >
+              {contact.priority} priority
+            </Badge>
+          )}
+        </div>
+        {contact?.assignedTo && (
+          <div className="flex items-center gap-1 text-xs text-surface-500">
+            <ApperIcon name="User" size={12} />
+            {contact.assignedTo}
+          </div>
+        )}
+      </div>
 
       {/* Tags */}
       {contact?.tags && contact.tags.length > 0 && (
@@ -73,6 +100,16 @@ const ContactCard = ({ contact, onEdit, onDelete, onViewConversations, ...props 
         </div>
       )}
 
+      {/* Pipeline Stage */}
+      {contact?.pipelineStage && (
+        <div className="mb-3">
+          <div className="flex items-center gap-2 text-xs text-surface-500">
+            <ApperIcon name="Target" size={12} />
+            <span>Pipeline: {contact.pipelineStage}</span>
+          </div>
+        </div>
+      )}
+
       {/* Notes */}
       {contact?.notes && (
         <div className="mb-3">
@@ -81,7 +118,6 @@ const ContactCard = ({ contact, onEdit, onDelete, onViewConversations, ...props 
           </p>
         </div>
       )}
-
       {/* Footer */}
       <div className="flex items-center justify-between text-xs text-surface-500 pt-3 border-t border-surface-100">
         <div className="flex items-center gap-1">
