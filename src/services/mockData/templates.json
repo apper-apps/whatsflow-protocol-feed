@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "name": "Welcome New Customer",
+    "content": "Hi {{name}}! Welcome to our service. We're excited to have you on board. If you have any questions, feel free to ask!",
+    "category": "Greeting",
+    "variables": ["name"]
+  },
+  {
+    "Id": 2,
+    "name": "Order Confirmation",
+    "content": "Thank you for your order #{{orderNumber}}! Your order total is ${{amount}} and it will be processed within 24 hours.",
+    "category": "Orders",
+    "variables": ["orderNumber", "amount"]
+  },
+  {
+    "Id": 3,
+    "name": "Shipping Update",
+    "content": "Great news {{name}}! Your order #{{orderNumber}} has been shipped and should arrive by {{deliveryDate}}. Tracking: {{trackingNumber}}",
+    "category": "Shipping",
+    "variables": ["name", "orderNumber", "deliveryDate", "trackingNumber"]
+  },
+  {
+    "Id": 4,
+    "name": "Support Follow-up",
+    "content": "Hi {{name}}, I wanted to follow up on our previous conversation. Has your issue been resolved? Please let me know if you need any additional assistance.",
+    "category": "Support",
+    "variables": ["name"]
+  },
+  {
+    "Id": 5,
+    "name": "Promotional Offer",
+    "content": "Hi {{name}}! We have a special {{discount}}% discount on {{product}} just for you. Use code {{promoCode}} at checkout. Valid until {{expiryDate}}.",
+    "category": "Marketing",
+    "variables": ["name", "discount", "product", "promoCode", "expiryDate"]
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "phone": "+1234567890",
+    "name": "Sarah Johnson",
+    "tags": ["VIP", "Premium Customer"],
+    "notes": "Frequent buyer, prefers email communication for follow-ups",
+    "createdAt": "2024-01-10T14:20:00Z",
+    "lastMessageAt": "2024-01-15T10:30:00Z",
+    "avatar": "SJ"
+  },
+  {
+    "Id": 2,
+    "phone": "+1234567891",
+    "name": "Michael Chen",
+    "tags": ["New Customer"],
+    "notes": "First-time buyer, interested in tech products",
+    "createdAt": "2024-01-12T16:45:00Z",
+    "lastMessageAt": "2024-01-15T09:45:00Z",
+    "avatar": "MC"
+  },
+  {
+    "Id": 3,
+    "phone": "+1234567892",
+    "name": "Emma Rodriguez",
+    "tags": ["Support", "Technical"],
+    "notes": "Software developer, usually needs technical assistance",
+    "createdAt": "2024-01-08T11:30:00Z",
+    "lastMessageAt": "2024-01-15T08:20:00Z",
+    "avatar": "ER"
+  },
+  {
+    "Id": 4,
+    "phone": "+1234567893",
+    "name": "David Thompson",
+    "tags": ["Wholesale", "Business"],
+    "notes": "Bulk order customer, negotiates pricing frequently",
+    "createdAt": "2024-01-14T09:15:00Z",
+    "lastMessageAt": "2024-01-15T11:15:00Z",
+    "avatar": "DT"
+  },
+  {
+    "Id": 5,
+    "phone": "+1234567894",
+    "name": "Lisa Park",
+    "tags": ["Return Customer", "Promotions"],
+    "notes": "Responds well to promotional offers, loyal customer",
+    "createdAt": "2024-01-05T13:40:00Z",
+    "lastMessageAt": "2024-01-15T07:30:00Z",
+    "avatar": "LP"
+  }
+]

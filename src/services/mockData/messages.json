@@ -1,0 +1,110 @@
+[
+  {
+    "Id": 1,
+    "conversationId": 1,
+    "text": "Hi! I need help with my order #12345",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T10:25:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 2,
+    "conversationId": 1,
+    "text": "Hello Sarah! I'd be happy to help you with your order. Let me check the status for you.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T10:26:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 3,
+    "conversationId": 1,
+    "text": "Actually, I also wanted to ask about the return policy",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T10:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 4,
+    "conversationId": 2,
+    "text": "I received my order today and everything looks great!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:40:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 5,
+    "conversationId": 2,
+    "text": "That's wonderful to hear! Thank you for choosing us. If you need anything else, please don't hesitate to reach out.",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:42:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 6,
+    "conversationId": 2,
+    "text": "Thank you for the quick response!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T09:45:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 7,
+    "conversationId": 3,
+    "text": "The technical issue has been resolved. Thank you for your patience!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:15:00Z",
+    "isIncoming": false,
+    "status": "read"
+  },
+  {
+    "Id": 8,
+    "conversationId": 3,
+    "text": "Perfect, issue resolved. Thanks!",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T08:20:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 9,
+    "conversationId": 4,
+    "text": "When will my product be delivered?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T11:15:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 10,
+    "conversationId": 5,
+    "text": "I placed an order last week but haven't received any updates",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T07:25:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 11,
+    "conversationId": 5,
+    "text": "Can someone please help me?",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T07:28:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  },
+  {
+    "Id": 12,
+    "conversationId": 5,
+    "text": "I'm still waiting for an update",
+    "mediaUrl": null,
+    "timestamp": "2024-01-15T07:30:00Z",
+    "isIncoming": true,
+    "status": "delivered"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "contactId": 1,
+    "status": "new",
+    "assignedTo": "Agent 1",
+    "updatedAt": "2024-01-15T10:30:00Z",
+    "unreadCount": 2,
+    "lastMessage": "Hi! I need help with my order",
+    "lastMessageTime": "2024-01-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "contactId": 2,
+    "status": "ongoing",
+    "assignedTo": "Agent 2",
+    "updatedAt": "2024-01-15T09:45:00Z",
+    "unreadCount": 0,
+    "lastMessage": "Thank you for the quick response!",
+    "lastMessageTime": "2024-01-15T09:45:00Z"
+  },
+  {
+    "Id": 3,
+    "contactId": 3,
+    "status": "resolved",
+    "assignedTo": "Agent 1",
+    "updatedAt": "2024-01-15T08:20:00Z",
+    "unreadCount": 0,
+    "lastMessage": "Perfect, issue resolved. Thanks!",
+    "lastMessageTime": "2024-01-15T08:20:00Z"
+  },
+  {
+    "Id": 4,
+    "contactId": 4,
+    "status": "new",
+    "assignedTo": "Agent 3",
+    "updatedAt": "2024-01-15T11:15:00Z",
+    "unreadCount": 1,
+    "lastMessage": "When will my product be delivered?",
+    "lastMessageTime": "2024-01-15T11:15:00Z"
+  },
+  {
+    "Id": 5,
+    "contactId": 5,
+    "status": "ongoing",
+    "assignedTo": "Agent 2",
+    "updatedAt": "2024-01-15T07:30:00Z",
+    "unreadCount": 3,
+    "lastMessage": "I'm still waiting for an update",
+    "lastMessageTime": "2024-01-15T07:30:00Z"
+  }
+]
