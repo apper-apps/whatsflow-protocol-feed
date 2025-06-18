@@ -139,45 +139,46 @@ const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
         />
       </div>
 
-      {/* Conversation List */}
+{/* Conversation List */}
       <div className="flex-1 overflow-y-auto">
         <AnimatePresence>
-{filteredConversations.length === 0 ? (
-            <div className="flex items-center justify-center h-full p-4">
-              <EmptyState 
-                title="No matches found"
-                description="Try adjusting your search or filters"
-                actionLabel="Clear Search"
-                onAction={() => setSearchQuery('')}
-              />
-            </div>
-          ) : (
-            filteredConversations?.map((conversation, index) => {
-              // Safe contact lookup with null checks
-              const contact = contacts?.find(c => c?.Id === conversation?.contactId) || null
-              
-              // Skip rendering if conversation is invalid
-              if (!conversation?.Id) return null
-              
-              return (
-                <motion.div
-                  key={conversation.Id}
-                  initial={staggerItemInitial}
-                  animate={staggerItemAnimate}
-                  transition={getStaggerTransition(index)}
-                >
-                  <ConversationCard
-                    conversation={conversation}
-                    contact={contact}
-                    isActive={selectedConversationId === conversation.Id}
-                    onClick={() => handleConversationClick(conversation)}
-                  />
-                </motion.div>
-              )
-            }).filter(Boolean) || []
-          )}
+          <>
+            {filteredConversations.length === 0 ? (
+              <div className="flex items-center justify-center h-full p-4">
+                <EmptyState 
+                  title="No matches found"
+                  description="Try adjusting your search or filters"
+                  actionLabel="Clear Search"
+                  onAction={() => setSearchQuery('')}
+                />
+              </div>
+            ) : (
+              filteredConversations?.map((conversation, index) => {
+                // Safe contact lookup with null checks
+                const contact = contacts?.find(c => c?.Id === conversation?.contactId) || null
+                
+                // Skip rendering if conversation is invalid
+                if (!conversation?.Id) return null
+                
+                return (
+                  <motion.div
+                    key={conversation.Id}
+                    initial={staggerItemInitial}
+                    animate={staggerItemAnimate}
+                    transition={getStaggerTransition(index)}
+                  >
+                    <ConversationCard
+                      conversation={conversation}
+                      contact={contact}
+                      isActive={selectedConversationId === conversation.Id}
+                      onClick={() => handleConversationClick(conversation)}
+                    />
+                  </motion.div>
+                )
+              }).filter(Boolean) || []
+            )}
+          </>
         </AnimatePresence>
-      </div>
       </div>
     </div>
   )
