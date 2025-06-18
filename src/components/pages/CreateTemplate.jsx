@@ -393,7 +393,7 @@ const getPreviewContent = () => {
                     />
 <div className="flex justify-between items-center mt-1">
                       <p className="text-xs text-surface-500">
-                        Use numbered variables: {'{{'}{1}{'}}'}, {'{{'}{2}{'}}'}, {'{{'}{3}{'}}'}, etc.
+                        Use numbered variables: {'{{1}}'}, {'{{2}}'}, {'{{3}}'}, etc.
                       </p>
                       <span className="text-xs text-surface-500">
                         {formData.body.length}/1024 characters
@@ -415,7 +415,7 @@ const getPreviewContent = () => {
                           size="sm"
                           onClick={() => insertVariable(num)}
                         >
-                          Insert {{`{{${num}}}`}}
+                          Insert {'{{' + num + '}}'}
                         </Button>
                       ))}
                     </div>
