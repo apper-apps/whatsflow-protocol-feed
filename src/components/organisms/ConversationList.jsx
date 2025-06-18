@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { conversationService, contactService } from '@/services'
-import ConversationCard from '@/components/molecules/ConversationCard'
-import SearchBar from '@/components/molecules/SearchBar'
-import SkeletonLoader from '@/components/atoms/SkeletonLoader'
-import ErrorState from '@/components/organisms/ErrorState'
-import EmptyState from '@/components/organisms/EmptyState'
-import { toast } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { contactService, conversationService } from "@/services";
+import ConversationCard from "@/components/molecules/ConversationCard";
+import SearchBar from "@/components/molecules/SearchBar";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader";
+import ErrorState from "@/components/organisms/ErrorState";
+import EmptyState from "@/components/organisms/EmptyState";
+import { toast } from "react-toastify";
 
 const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
   const [conversations, setConversations] = useState([])
@@ -142,7 +142,7 @@ const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
       {/* Conversation List */}
       <div className="flex-1 overflow-y-auto">
         <AnimatePresence>
-          {filteredConversations.length === 0 ? (
+{filteredConversations.length === 0 ? (
             <div className="flex items-center justify-center h-full p-4">
               <EmptyState 
                 title="No matches found"
@@ -152,8 +152,13 @@ const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
               />
             </div>
           ) : (
-            filteredConversations.map((conversation, index) => {
-              const contact = contacts.find(c => c.Id === conversation.contactId)
+            filteredConversations?.map((conversation, index) => {
+              // Safe contact lookup with null checks
+              const contact = contacts?.find(c => c?.Id === conversation?.contactId) || null
+              
+              // Skip rendering if conversation is invalid
+              if (!conversation?.Id) return null
+              
               return (
                 <motion.div
                   key={conversation.Id}
@@ -169,9 +174,10 @@ const ConversationList = ({ selectedConversationId, onSelectConversation }) => {
                   />
                 </motion.div>
               )
-            })
+            }).filter(Boolean) || []
           )}
         </AnimatePresence>
+      </div>
       </div>
     </div>
   )
