@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ConversationList from '@/components/organisms/ConversationList';
 
 const Inbox = () => {
+  const [selectedConversation, setSelectedConversation] = useState(null);
+
+  const handleConversationSelect = (conversation) => {
+    setSelectedConversation(conversation);
+  };
+
   return (
     <div className="h-full flex flex-col">
       <div className="bg-white border-b border-gray-200 px-6 py-4">
@@ -11,12 +18,10 @@ const Inbox = () => {
       <div className="flex-1 flex">
         {/* Conversation List */}
         <div className="w-1/3 border-r border-gray-200 bg-white">
-          <div className="p-4">
-            <div className="text-center text-gray-500 mt-8">
-              <p>No conversations yet</p>
-              <p className="text-sm mt-2">Your inbox conversations will appear here</p>
-            </div>
-          </div>
+          <ConversationList 
+            selectedConversationId={selectedConversation?.Id}
+            onSelectConversation={handleConversationSelect}
+          />
         </div>
         
         {/* Message Area */}
