@@ -1,11 +1,39 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
-import { formatDistanceToNow, format } from 'date-fns'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import Badge from '@/components/atoms/Badge'
-import { billingService } from '@/services'
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { format, formatDistanceToNow } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import { billingService } from "@/services";
+
+// Helper function to safely format dates
+const safeFormatDate = (dateString, formatString = 'MMM dd, yyyy') => {
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      return 'Invalid date'
+    }
+    return format(date, formatString)
+  } catch (error) {
+    console.warn('Date formatting error:', error)
+    return 'Invalid date'
+  }
+}
+
+// Helper function to safely format relative time
+const safeFormatDistanceToNow = (dateString, options = { addSuffix: true }) => {
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      return 'Invalid date'
+    }
+    return formatDistanceToNow(date, options)
+  } catch (error) {
+    console.warn('Relative time formatting error:', error)
+    return 'Invalid date'
+  }
+}
 
 const Billing = () => {
   const [subscription, setSubscription] = useState(null)
@@ -157,28 +185,33 @@ const Billing = () => {
             {subscription ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-medium text-surface-900 mb-2">{subscription.planName}</h3>
+<h3 className="font-medium text-surface-900 mb-2">{subscription.planName}</h3>
                   <p className="text-2xl font-bold text-surface-900 mb-1">
                     {formatCurrency(subscription.amount)}
-                    <span className="text-sm font-normal text-surface-500">/{subscription.interval}</span>
                   </p>
-                  <p className="text-surface-600">
-                    Next billing: {format(new Date(subscription.nextBilling), 'MMM dd, yyyy')}
-                  </p>
+                  <p className="text-sm text-surface-500">per month</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Button variant="outline" size="sm">
-                    Change Plan
-                  </Button>
-                  {subscription.status === 'active' && (
-                    <Button 
-                      variant="danger" 
-                      size="sm"
-                      onClick={handleCancelSubscription}
-                    >
-                      Cancel
+                <div>
+                  <div className="text-sm text-surface-500 mb-1">Next billing date</div>
+                  <div className="text-lg font-semibold text-surface-900">
+                    {subscription.status === 'cancelled' ? 'Cancelled' : (
+                      safeFormatDate(subscription.nextBilling)
+                    )}
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm">
+                      Change Plan
                     </Button>
-                  )}
+                    {subscription.status === 'active' && (
+                      <Button 
+                        variant="danger" 
+                        size="sm"
+                        onClick={handleCancelSubscription}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -243,7 +276,7 @@ const Billing = () => {
                   <th className="text-left py-3 px-4 font-medium text-surface-700">Invoice</th>
                   <th className="text-left py-3 px-4 font-medium text-surface-700">Date</th>
                   <th className="text-left py-3 px-4 font-medium text-surface-700">Amount</th>
-                  <th className="text-left py-3 px-4 font-medium text-surface-700">Status</th>
+<th className="text-left py-3 px-4 font-medium text-surface-700">Status</th>
                   <th className="text-center py-3 px-4 font-medium text-surface-700">Actions</th>
                 </tr>
               </thead>
@@ -255,15 +288,13 @@ const Billing = () => {
                       <div className="text-sm text-surface-500">{invoice.description}</div>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="text-surface-900">{format(new Date(invoice.date), 'MMM dd, yyyy')}</div>
+                      <div className="text-surface-900">{safeFormatDate(invoice.date)}</div>
                       <div className="text-sm text-surface-500">
-                        {formatDistanceToNow(new Date(invoice.date), { addSuffix: true })}
+                        {safeFormatDistanceToNow(invoice.date)}
                       </div>
-                    </td>
+</td>
                     <td className="py-4 px-4">
-                      <div className="font-medium text-surface-900">
-                        {formatCurrency(invoice.amount)}
-                      </div>
+                      <div className="font-medium text-surface-900">{formatCurrency(invoice.amount)}</div>
                     </td>
                     <td className="py-4 px-4">
                       <Badge variant={getStatusBadgeVariant(invoice.status)}>
@@ -332,14 +363,14 @@ const Billing = () => {
                   {method.isDefault && (
                     <Badge variant="primary" size="sm">Default</Badge>
                   )}
-                </div>
+</div>
                 
                 <div className="flex items-center justify-between text-sm text-surface-500 mb-3">
                   <span>Expires {method.expMonth}/{method.expYear}</span>
-                  <span>Added {formatDistanceToNow(new Date(method.createdAt), { addSuffix: true })}</span>
+                  <span>Added {safeFormatDistanceToNow(method.createdAt)}</span>
                 </div>
-
-                <div className="flex gap-2">
+                
+                <div className="flex items-center gap-2">
                   {!method.isDefault && (
                     <Button variant="outline" size="sm" className="flex-1">
                       Set Default

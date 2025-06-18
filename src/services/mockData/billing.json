@@ -45,13 +45,13 @@
       "date": "2023-11-15T00:00:00Z",
       "dueDate": "2023-11-15T00:00:00Z"
     },
-    {
+{
       "Id": 5,
       "number": "INV-2023-010",
       "description": "Setup Fee",
       "amount": 9900,
       "status": "paid",
-      "date": "10/15/2023 12:00:00 AMZ",
+      "date": "2023-10-15T00:00:00Z",
       "dueDate": "2023-10-15T00:00:00Z"
     }
   ],
