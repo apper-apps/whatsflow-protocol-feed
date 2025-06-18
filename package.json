@@ -22,9 +22,12 @@
     "react-flow-renderer": "^10.3.17",
     "react-redux": "9.2.0",
 "react-router-dom": "6.15.0",
-    "react-toastify": "11.0.5",
+"react-toastify": "11.0.5",
     "react-quill": "^2.0.0",
-    "papaparse": "^5.4.1"
+    "papaparse": "^5.4.1",
+    "xlsx": "^0.18.5",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.31"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

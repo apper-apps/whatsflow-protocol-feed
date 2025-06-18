@@ -52,12 +52,12 @@ const ContactCard = ({ contact, onEdit, onDelete, onViewConversations, ...props 
             onClick={() => onEdit?.(contact)}
             className="p-1"
           />
-          <Button
+<Button
             variant="ghost"
             size="sm"
             icon="Trash2"
             onClick={() => onDelete?.(contact)}
-            className="p-1 text-error hover:text-error"
+            className="p-1 text-error hover:text-error hover:bg-error/10"
           />
         </div>
       </div>
