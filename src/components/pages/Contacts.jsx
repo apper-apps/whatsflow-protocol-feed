@@ -3,9 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { formatDistanceToNow } from "date-fns";
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import { contactService } from "@/services";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
@@ -25,14 +22,11 @@ const Contacts = () => {
   const [error, setError] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState('table') // 'grid', 'table'
-const [showContactModal, setShowContactModal] = useState(false)
+  const [showContactModal, setShowContactModal] = useState(false)
   const [editingContact, setEditingContact] = useState(null)
   const [teamMembers, setTeamMembers] = useState([])
   const [selectedContacts, setSelectedContacts] = useState([])
   const [showBulkActions, setShowBulkActions] = useState(false)
-  const [showExportDropdown, setShowExportDropdown] = useState(false)
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
-  const [contactToDelete, setContactToDelete] = useState(null)
   const [filters, setFilters] = useState({
     status: '',
     agent: '',
@@ -174,29 +168,16 @@ const handleSearch = (query) => {
     }
   }
 
-const handleDelete = (contact) => {
-    setContactToDelete(contact)
-    setShowDeleteConfirmation(true)
-  }
-
-  const confirmDelete = async () => {
-    if (!contactToDelete) return
-    
-    try {
-      await contactService.delete(contactToDelete.Id)
-      setContacts(prev => prev.filter(c => c.Id !== contactToDelete.Id))
-      toast.success('Contact deleted successfully')
-    } catch (err) {
-      toast.error('Failed to delete contact')
-    } finally {
-      setShowDeleteConfirmation(false)
-      setContactToDelete(null)
+  const handleDelete = async (contact) => {
+    if (window.confirm(`Are you sure you want to delete ${contact.name}?`)) {
+      try {
+        await contactService.delete(contact.Id)
+        setContacts(prev => prev.filter(c => c.Id !== contact.Id))
+        toast.success('Contact deleted successfully')
+      } catch (err) {
+        toast.error('Failed to delete contact')
+      }
     }
-  }
-
-  const cancelDelete = () => {
-    setShowDeleteConfirmation(false)
-    setContactToDelete(null)
   }
 
 const handleViewConversations = (contact) => {
@@ -245,18 +226,8 @@ const handleViewConversations = (contact) => {
     }
   }
 
-const handleBulkDelete = async () => {
-    const contactNames = contacts
-      .filter(c => selectedContacts.includes(c.Id))
-      .map(c => c.name)
-      .slice(0, 3)
-      .join(', ')
-    
-    const displayNames = selectedContacts.length > 3 
-      ? `${contactNames} and ${selectedContacts.length - 3} more`
-      : contactNames
-    
-    if (window.confirm(`Are you sure you want to delete ${selectedContacts.length} contacts?\n\n${displayNames}\n\nThis action cannot be undone.`)) {
+  const handleBulkDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete ${selectedContacts.length} contacts?`)) {
       try {
         await Promise.all(selectedContacts.map(id => contactService.delete(id)))
         setContacts(prev => prev.filter(contact => !selectedContacts.includes(contact.Id)))
@@ -267,24 +238,9 @@ const handleBulkDelete = async () => {
       }
     }
   }
-const getExportData = (exportType) => {
-    let dataToExport = []
-    
-    switch (exportType) {
-      case 'all':
-        dataToExport = contacts
-        break
-      case 'filtered':
-        dataToExport = filteredContacts
-        break
-      case 'selected':
-        dataToExport = contacts.filter(c => selectedContacts.includes(c.Id))
-        break
-      default:
-        dataToExport = filteredContacts
-    }
-    
-    return dataToExport.map(contact => ({
+
+  const handleExport = () => {
+    const exportData = filteredContacts.map(contact => ({
       Name: contact.name,
       Phone: contact.phone,
       Email: contact.email || '',
@@ -293,76 +249,21 @@ const getExportData = (exportType) => {
       Tags: contact.tags?.join(', ') || '',
       Priority: contact.priority,
       'Created Date': new Date(contact.createdAt).toLocaleDateString(),
-      'Last Message': new Date(contact.lastMessageAt).toLocaleDateString(),
-      Notes: contact.notes || ''
+      'Last Message': new Date(contact.lastMessageAt).toLocaleDateString()
     }))
-  }
 
-  const handleExportCSV = (exportType) => {
-    const exportData = getExportData(exportType)
     const csv = Papa.unparse(exportData)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
-    link.setAttribute('download', `contacts-${exportType}-${new Date().toISOString().split('T')[0]}.csv`)
+    link.setAttribute('download', `contacts-${new Date().toISOString().split('T')[0]}.csv`)
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     
-    toast.success(`${exportData.length} contacts exported as CSV`)
-    setShowExportDropdown(false)
-  }
-
-  const handleExportXLS = (exportType) => {
-    const exportData = getExportData(exportType)
-    const worksheet = XLSX.utils.json_to_sheet(exportData)
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Contacts')
-    
-    const fileName = `contacts-${exportType}-${new Date().toISOString().split('T')[0]}.xlsx`
-    XLSX.writeFile(workbook, fileName)
-    
-    toast.success(`${exportData.length} contacts exported as Excel`)
-    setShowExportDropdown(false)
-  }
-
-  const handleExportPDF = (exportType) => {
-    const exportData = getExportData(exportType)
-    const doc = new jsPDF()
-    
-    doc.setFontSize(18)
-    doc.text('Contacts Export', 20, 20)
-    
-    doc.setFontSize(12)
-    doc.text(`Export Type: ${exportType.charAt(0).toUpperCase() + exportType.slice(1)}`, 20, 35)
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 45)
-    doc.text(`Total Contacts: ${exportData.length}`, 20, 55)
-    
-    const tableData = exportData.map(contact => [
-      contact.Name,
-      contact.Phone,
-      contact.Email,
-      contact.Status,
-      contact['Assigned To'],
-      contact.Priority
-    ])
-    
-    doc.autoTable({
-      head: [['Name', 'Phone', 'Email', 'Status', 'Assigned To', 'Priority']],
-      body: tableData,
-      startY: 65,
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [79, 70, 229] },
-      margin: { top: 65 }
-    })
-    
-    const fileName = `contacts-${exportType}-${new Date().toISOString().split('T')[0]}.pdf`
-    doc.save(fileName)
-    
-    toast.success(`${exportData.length} contacts exported as PDF`)
-    setShowExportDropdown(false)
+    toast.success('Contacts exported successfully')
   }
 
   const handleImport = (event) => {
@@ -498,7 +399,7 @@ const getExportData = (exportType) => {
                 <h1 className="text-2xl font-semibold text-surface-900">Contacts</h1>
                 <p className="text-surface-600">Manage your customer contacts and leads</p>
             </div>
-<div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
                 <input
                     type="file"
                     accept=".csv"
@@ -510,99 +411,8 @@ const getExportData = (exportType) => {
                     icon="Upload"
                     onClick={() => document.getElementById("import-contacts").click()}>Import
                                 </Button>
-                
-                {/* Export Dropdown */}
-                <div className="relative">
-                    <Button 
-                        variant="outline" 
-                        icon="Download" 
-                        onClick={() => setShowExportDropdown(!showExportDropdown)}
-                    >
-                        Export
-                        <ApperIcon name="ChevronDown" size={14} />
-                    </Button>
-                    
-                    {showExportDropdown && (
-                        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-surface-200 z-50">
-                            <div className="p-4">
-                                <h3 className="font-medium text-surface-900 mb-3">Export Options</h3>
-                                
-                                {/* Export Scope */}
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-surface-700 mb-2">Export Scope</label>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm text-surface-600">Current View ({filteredContacts.length} contacts)</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm text-surface-600">All Contacts ({contacts.length} contacts)</span>
-                                        </div>
-                                        {selectedContacts.length > 0 && (
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-sm text-surface-600">Selected ({selectedContacts.length} contacts)</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                
-                                {/* Export Formats */}
-                                <div className="space-y-2">
-                                    <div className="grid grid-cols-3 gap-2">
-                                        <Button size="sm" variant="outline" onClick={() => handleExportCSV('filtered')}>
-                                            <ApperIcon name="FileText" size={14} />
-                                            CSV
-                                        </Button>
-                                        <Button size="sm" variant="outline" onClick={() => handleExportXLS('filtered')}>
-                                            <ApperIcon name="FileSpreadsheet" size={14} />
-                                            Excel
-                                        </Button>
-                                        <Button size="sm" variant="outline" onClick={() => handleExportPDF('filtered')}>
-                                            <ApperIcon name="FileText" size={14} />
-                                            PDF
-                                        </Button>
-                                    </div>
-                                    
-                                    <div className="border-t border-surface-200 pt-2 mt-2">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="text-xs text-surface-500">Quick Export All:</span>
-                                        </div>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            <Button size="sm" variant="ghost" onClick={() => handleExportCSV('all')}>
-                                                All CSV
-                                            </Button>
-                                            <Button size="sm" variant="ghost" onClick={() => handleExportXLS('all')}>
-                                                All Excel
-                                            </Button>
-                                            <Button size="sm" variant="ghost" onClick={() => handleExportPDF('all')}>
-                                                All PDF
-                                            </Button>
-                                        </div>
-                                    </div>
-                                    
-                                    {selectedContacts.length > 0 && (
-                                        <div className="border-t border-surface-200 pt-2 mt-2">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-xs text-surface-500">Export Selected:</span>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-2">
-                                                <Button size="sm" variant="ghost" onClick={() => handleExportCSV('selected')}>
-                                                    Sel CSV
-                                                </Button>
-                                                <Button size="sm" variant="ghost" onClick={() => handleExportXLS('selected')}>
-                                                    Sel Excel
-                                                </Button>
-                                                <Button size="sm" variant="ghost" onClick={() => handleExportPDF('selected')}>
-                                                    Sel PDF
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-                
+                <Button variant="outline" icon="Download" onClick={handleExport}>Export
+                                </Button>
                 <Button variant="primary" icon="Plus" onClick={handleAddContact}>Add Contact
                                 </Button>
             </div>
@@ -902,7 +712,7 @@ const getExportData = (exportType) => {
                 disabled={currentPage === totalPages} />
         </div>
     </div>}
-{/* Contact Modal */}
+    {/* Contact Modal */}
     <ContactModal
         isOpen={showContactModal}
         onClose={() => {
@@ -912,59 +722,6 @@ const getExportData = (exportType) => {
         onSave={handleSaveContact}
         contact={editingContact}
         teamMembers={teamMembers} />
-    
-    {/* Delete Confirmation Modal */}
-    {showDeleteConfirmation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-lg p-6 max-w-md w-full mx-4"
-            >
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center">
-                        <ApperIcon name="AlertTriangle" size={20} className="text-error" />
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-surface-900">Delete Contact</h3>
-                        <p className="text-sm text-surface-600">This action cannot be undone</p>
-                    </div>
-                </div>
-                
-                <div className="mb-6">
-                    <p className="text-surface-700">
-                        Are you sure you want to delete <strong>{contactToDelete?.name}</strong>?
-                    </p>
-                    <div className="mt-2 p-3 bg-surface-50 rounded-lg">
-                        <div className="text-sm text-surface-600">
-                            <div>Phone: {contactToDelete?.phone}</div>
-                            <div>Status: {contactToDelete?.leadStatus}</div>
-                            {contactToDelete?.assignedTo && (
-                                <div>Assigned to: {contactToDelete.assignedTo}</div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="flex items-center gap-3 justify-end">
-                    <Button variant="outline" onClick={cancelDelete}>
-                        Cancel
-                    </Button>
-                    <Button variant="danger" onClick={confirmDelete}>
-                        Delete Contact
-                    </Button>
-                </div>
-            </motion.div>
-        </div>
-    )}
-    
-    {/* Click outside to close export dropdown */}
-    {showExportDropdown && (
-        <div 
-            className="fixed inset-0 z-40" 
-            onClick={() => setShowExportDropdown(false)}
-        />
-    )}
 </motion.div>
   )
 }
