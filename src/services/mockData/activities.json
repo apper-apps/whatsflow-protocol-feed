@@ -1,0 +1,186 @@
+[
+  {
+    "Id": 1,
+    "type": "call",
+    "contactId": 1,
+    "conversationId": 1,
+    "title": "Initial Contact Call",
+    "description": "First contact call to discuss product interest",
+    "details": {
+      "duration": "12:45",
+      "outcome": "interested",
+      "notes": "Customer showed strong interest in premium package. Requested detailed pricing information and demo scheduling.",
+      "phoneNumber": "+1-555-0123"
+    },
+    "agent": "Sarah Wilson",
+    "priority": "high",
+    "timestamp": "2024-01-15T14:30:00Z",
+    "createdAt": "2024-01-15T14:30:00Z"
+  },
+  {
+    "Id": 2,
+    "type": "chat",
+    "contactId": 1,
+    "conversationId": 1,
+    "title": "WhatsApp Follow-up",
+    "description": "Follow-up chat session after initial call",
+    "details": {
+      "platform": "whatsapp",
+      "messageCount": 12,
+      "duration": "25:30",
+      "resolved": true,
+      "summary": "Provided pricing details and scheduled demo for next week"
+    },
+    "agent": "Sarah Wilson",
+    "priority": "medium",
+    "timestamp": "2024-01-15T10:15:00Z",
+    "createdAt": "2024-01-15T10:15:00Z"
+  },
+  {
+    "Id": 3,
+    "type": "note",
+    "contactId": 1,
+    "conversationId": 1,
+    "title": "Demo Preparation Notes",
+    "description": "Preparation notes for upcoming product demo",
+    "details": {
+      "content": "Customer specifically interested in automation features and integration capabilities. Focus demo on workflow automation and API integrations. Has existing CRM system that needs integration.",
+      "category": "demo_prep",
+      "followUpDate": "2024-01-22T15:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "Sarah Wilson",
+    "priority": "high",
+    "timestamp": "2024-01-15T09:00:00Z",
+    "createdAt": "2024-01-15T09:00:00Z"
+  },
+  {
+    "Id": 4,
+    "type": "ticket",
+    "contactId": 2,
+    "conversationId": 2,
+    "title": "Integration Support Request",
+    "description": "Customer needs help with API integration setup",
+    "details": {
+      "ticketId": "TK-2024-001",
+      "category": "technical_support",
+      "status": "in_progress",
+      "priority": "high",
+      "resolution": "Working with development team on custom integration solution"
+    },
+    "agent": "Mike Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-14T16:45:00Z",
+    "createdAt": "2024-01-14T16:45:00Z"
+  },
+  {
+    "Id": 5,
+    "type": "call",
+    "contactId": 2,
+    "conversationId": 2,
+    "title": "Technical Consultation",
+    "description": "Technical consultation call for integration requirements",
+    "details": {
+      "duration": "35:20",
+      "outcome": "requirements_gathered",
+      "notes": "Detailed technical requirements gathered. Customer needs custom webhook integration with Salesforce. Estimated 2-3 days development time.",
+      "phoneNumber": "+1-555-0456"
+    },
+    "agent": "Mike Johnson",
+    "priority": "high",
+    "timestamp": "2024-01-14T11:30:00Z",
+    "createdAt": "2024-01-14T11:30:00Z"
+  },
+  {
+    "Id": 6,
+    "type": "chat",
+    "contactId": 3,
+    "conversationId": 3,
+    "title": "Billing Inquiry",
+    "description": "Customer inquiry about billing and subscription options",
+    "details": {
+      "platform": "whatsapp",
+      "messageCount": 8,
+      "duration": "15:45",
+      "resolved": true,
+      "summary": "Explained pricing plans and provided discount code for annual subscription"
+    },
+    "agent": "Emily Davis",
+    "priority": "medium",
+    "timestamp": "2024-01-13T13:20:00Z",
+    "createdAt": "2024-01-13T13:20:00Z"
+  },
+  {
+    "Id": 7,
+    "type": "note",
+    "contactId": 3,
+    "conversationId": 3,
+    "title": "Discount Approval",
+    "description": "Approved 15% discount for annual subscription",
+    "details": {
+      "content": "Customer committed to annual subscription. Approved 15% discount (code: ANNUAL15). Follow up in 3 days if no response.",
+      "category": "pricing",
+      "followUpDate": "2024-01-16T10:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "Emily Davis",
+    "priority": "medium",
+    "timestamp": "2024-01-13T13:45:00Z",
+    "createdAt": "2024-01-13T13:45:00Z"
+  },
+  {
+    "Id": 8,
+    "type": "call",
+    "contactId": 4,
+    "conversationId": null,
+    "title": "Cold Outreach Call",
+    "description": "Initial cold outreach call to potential lead",
+    "details": {
+      "duration": "8:30",
+      "outcome": "no_answer",
+      "notes": "Left voicemail with brief introduction and value proposition. Will follow up with WhatsApp message.",
+      "phoneNumber": "+1-555-0789"
+    },
+    "agent": "John Smith",
+    "priority": "low",
+    "timestamp": "2024-01-12T16:00:00Z",
+    "createdAt": "2024-01-12T16:00:00Z"
+  },
+  {
+    "Id": 9,
+    "type": "ticket",
+    "contactId": 1,
+    "conversationId": 1,
+    "title": "Feature Request",
+    "description": "Customer requested additional reporting features",
+    "details": {
+      "ticketId": "TK-2024-002",
+      "category": "feature_request",
+      "status": "under_review",
+      "priority": "medium",
+      "resolution": "Forwarded to product team for evaluation"
+    },
+    "agent": "Sarah Wilson",
+    "priority": "medium",
+    "timestamp": "2024-01-11T14:15:00Z",
+    "createdAt": "2024-01-11T14:15:00Z"
+  },
+  {
+    "Id": 10,
+    "type": "note",
+    "contactId": 5,
+    "conversationId": null,
+    "title": "Lead Qualification Notes",
+    "description": "Initial lead qualification and scoring",
+    "details": {
+      "content": "High-value prospect from enterprise segment. Company size 500+ employees. Current pain points with existing solution. Strong budget authority. Schedule executive demo.",
+      "category": "qualification",
+      "followUpDate": "2024-01-17T14:00:00Z",
+      "isFollowUpRequired": true
+    },
+    "agent": "John Smith",
+    "priority": "high",
+    "timestamp": "2024-01-10T11:30:00Z",
+    "createdAt": "2024-01-10T11:30:00Z"
+  }
+]

@@ -1,27 +1,16 @@
-import conversationService from './api/conversationService.js'
-import messageService from './api/messageService.js'
-import contactService from './api/contactService.js'
-import templateService from './api/templateService.js'
-import userService from './api/userService.js'
-import clientService from './api/clientService.js'
-import featureAccessService from './api/featureAccessService.js'
-import billingService from './api/billingService.js'
-import chatbotFlowService from './api/chatbotFlowService.js'
-
-// Export all services in a single, clean export block
-export {
-  conversationService,
-  messageService,
-  contactService,
-  templateService,
-  userService,
-  clientService,
-  featureAccessService,
-  billingService,
-  chatbotFlowService
-}
+// Service exports
+export { default as contactService } from './api/contactService'
+export { default as conversationService } from './api/conversationService'
+export { default as messageService } from './api/messageService'
+export { default as templateService } from './api/templateService'
+export { default as userService } from './api/userService'
+export { default as billingService } from './api/billingService'
+export { default as chatbotFlowService } from './api/chatbotFlowService'
+export { default as clientService } from './api/clientService'
+export { default as featureAccessService } from './api/featureAccessService'
+export { default as activityService } from './api/activityService'
 
 // Export aliases for backward compatibility
-export { billingService as billingAPI }
-export { userService as userAPI }
-export { chatbotFlowService as chatbotFlowAPI }
+export { default as billingAPI } from './api/billingService'
+export { default as userAPI } from './api/userService'
+export { default as chatbotFlowAPI } from './api/chatbotFlowService'
