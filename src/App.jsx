@@ -6,8 +6,9 @@ import Contacts from '@/components/pages/Contacts'
 import Templates from '@/components/pages/Templates'
 import Analytics from '@/components/pages/Analytics'
 import Settings from '@/components/pages/Settings'
+import Users from '@/components/pages/Users'
+import Billing from '@/components/pages/Billing'
 import NotFound from '@/components/pages/NotFound'
-
 function App() {
   return (
     <BrowserRouter>
@@ -18,7 +19,9 @@ function App() {
             <Route path="inbox" element={<Inbox />} />
             <Route path="contacts" element={<Contacts />} />
             <Route path="templates" element={<Templates />} />
-            <Route path="analytics" element={<Analytics />} />
+<Route path="analytics" element={<Analytics />} />
+            <Route path="users" element={<Users />} />
+            <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Route>

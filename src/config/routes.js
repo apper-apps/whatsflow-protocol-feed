@@ -2,8 +2,9 @@ import Inbox from '@/components/pages/Inbox';
 import Contacts from '@/components/pages/Contacts';
 import Templates from '@/components/pages/Templates';
 import Analytics from '@/components/pages/Analytics';
+import Users from '@/components/pages/Users';
+import Billing from '@/components/pages/Billing';
 import Settings from '@/components/pages/Settings';
-
 export const routes = {
   inbox: {
     id: 'inbox',
@@ -37,10 +38,24 @@ export const routes = {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
+path: '/settings',
     icon: 'Settings',
     component: Settings
+  },
+  users: {
+    id: 'users',
+    label: 'Users',
+    path: '/users',
+    icon: 'Users',
+    component: Users
+  },
+  billing: {
+    id: 'billing',
+    label: 'Billing',
+    path: '/billing',
+    icon: 'CreditCard',
+    component: Billing
   }
 };
 
 export const routeArray = Object.values(routes);
-export default routes;

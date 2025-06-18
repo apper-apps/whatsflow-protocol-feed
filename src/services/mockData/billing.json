@@ -1,0 +1,78 @@
+{
+  "subscription": {
+    "Id": 1,
+    "planName": "Professional Plan",
+    "amount": 4900,
+    "interval": "month",
+    "status": "active",
+    "nextBilling": "2024-03-15T00:00:00Z",
+    "createdAt": "2024-02-15T00:00:00Z"
+  },
+  "invoices": [
+    {
+      "Id": 1,
+      "number": "INV-2024-001",
+      "description": "Professional Plan - February 2024",
+      "amount": 4900,
+      "status": "paid",
+      "date": "2024-02-15T00:00:00Z",
+      "dueDate": "2024-02-15T00:00:00Z"
+    },
+    {
+      "Id": 2,
+      "number": "INV-2024-002",
+      "description": "Professional Plan - January 2024",
+      "amount": 4900,
+      "status": "paid",
+      "date": "2024-01-15T00:00:00Z",
+      "dueDate": "2024-01-15T00:00:00Z"
+    },
+    {
+      "Id": 3,
+      "number": "INV-2023-012",
+      "description": "Professional Plan - December 2023",
+      "amount": 4900,
+      "status": "paid",
+      "date": "2023-12-15T00:00:00Z",
+      "dueDate": "2023-12-15T00:00:00Z"
+    },
+    {
+      "Id": 4,
+      "number": "INV-2023-011",
+      "description": "Professional Plan - November 2023",
+      "amount": 4900,
+      "status": "paid",
+      "date": "2023-11-15T00:00:00Z",
+      "dueDate": "2023-11-15T00:00:00Z"
+    },
+    {
+      "Id": 5,
+      "number": "INV-2023-010",
+      "description": "Setup Fee",
+      "amount": 9900,
+      "status": "paid",
+      "date": "10/15/2023 12:00:00 AMZ",
+      "dueDate": "2023-10-15T00:00:00Z"
+    }
+  ],
+  "paymentMethods": [
+    {
+      "Id": 1,
+      "brand": "visa",
+      "last4": "4242",
+      "expMonth": 12,
+      "expYear": 2025,
+      "isDefault": true,
+      "createdAt": "2023-10-15T00:00:00Z"
+    },
+    {
+      "Id": 2,
+      "brand": "mastercard",
+      "last4": "5555",
+      "expMonth": 8,
+      "expYear": 2026,
+      "isDefault": false,
+      "createdAt": "2023-11-20T00:00:00Z"
+    }
+  ]
+}
