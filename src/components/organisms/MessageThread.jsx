@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { messageService, contactService } from '@/services'
-import MessageBubble from '@/components/molecules/MessageBubble'
-import Button from '@/components/atoms/Button'
-import Input from '@/components/atoms/Input'
-import Avatar from '@/components/atoms/Avatar'
-import Badge from '@/components/atoms/Badge'
-import SkeletonLoader from '@/components/atoms/SkeletonLoader'
-import ErrorState from '@/components/organisms/ErrorState'
-import ApperIcon from '@/components/ApperIcon'
-import { toast } from 'react-toastify'
-
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { contactService, conversationService, messageService } from "@/services";
+import MessageBubble from "@/components/molecules/MessageBubble";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Avatar from "@/components/atoms/Avatar";
+import Badge from "@/components/atoms/Badge";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader";
+import ErrorState from "@/components/organisms/ErrorState";
+import ApperIcon from "@/components/ApperIcon";
+import { toast } from "react-toastify";
 const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLeadPanel }) => {
   const [messages, setMessages] = useState([])
   const [contact, setContact] = useState(null)
@@ -97,16 +96,51 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
     } finally {
       setSending(false)
     }
-  }
+}
 
   const handleStatusChange = async (newStatus) => {
     if (onStatusChange) {
       try {
+        const oldStatus = conversation.status
         await onStatusChange(conversation.Id, newStatus)
+        
+        // Log status change activity
+        await conversationService.addStatusChangeActivity(conversation.Id, {
+          type: 'status_change',
+          description: `Status changed from ${oldStatus} to ${newStatus}`,
+          oldStatus,
+          newStatus,
+          agent: 'Current Agent' // Would come from auth context in real app
+        })
+        
         toast.success(`Conversation marked as ${newStatus}`)
       } catch (err) {
         toast.error('Failed to update status')
       }
+    }
+  }
+
+  const handleTransferChat = async (agentName) => {
+    try {
+      await conversationService.transferChat(conversation.Id, agentName)
+      
+      // Log transfer activity
+      await conversationService.addStatusChangeActivity(conversation.Id, {
+        type: 'transfer',
+        description: `Chat transferred to ${agentName}`,
+        fromAgent: conversation.assignedTo,
+        toAgent: agentName,
+        agent: 'Current Agent' // Would come from auth context
+      })
+      
+      toast.success(`Chat transferred to ${agentName}`)
+      
+      // Update UI if needed - would typically trigger parent re-fetch
+      if (onStatusChange) {
+        onStatusChange(conversation.Id, conversation.status)
+      }
+    } catch (err) {
+      toast.error('Failed to transfer chat')
     }
   }
 
@@ -214,6 +248,10 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
                   Reopen
                 </Button>
               )}
+              <TransferChatButton 
+                conversation={conversation}
+                onTransfer={handleTransferChat}
+              />
               <Button
                 variant="ghost"
                 size="sm"
@@ -362,7 +400,104 @@ const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLe
           className="hidden"
         />
       </div>
-    </div>
+</div>
+  )
+}
+
+// Transfer Chat Button Component
+const TransferChatButton = ({ conversation, onTransfer }) => {
+  const [showTransferModal, setShowTransferModal] = useState(false)
+  const [teamMembers, setTeamMembers] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    loadTeamMembers()
+  }, [])
+
+  const loadTeamMembers = async () => {
+    try {
+      const members = await contactService.getTeamMembers()
+      setTeamMembers(members)
+    } catch (err) {
+      console.error('Failed to load team members:', err)
+    }
+  }
+
+  const handleTransfer = async (member) => {
+    setLoading(true)
+    try {
+      await onTransfer(member.name)
+      setShowTransferModal(false)
+    } catch (err) {
+      // Error handling done in parent
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        icon="ArrowRightLeft"
+        onClick={() => setShowTransferModal(true)}
+      >
+        Transfer
+      </Button>
+
+      {showTransferModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-surface-900">Transfer Chat</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="X"
+                onClick={() => setShowTransferModal(false)}
+              />
+            </div>
+
+            <p className="text-sm text-surface-600 mb-4">
+              Select an agent to transfer this conversation to:
+            </p>
+
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {teamMembers.map((member) => (
+                <button
+                  key={member.Id}
+                  onClick={() => handleTransfer(member)}
+                  disabled={loading || member.name === conversation.assignedTo}
+                  className="w-full text-left p-3 rounded-lg border border-surface-200 hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <div className="font-medium text-surface-900">{member.name}</div>
+                  <div className="text-sm text-surface-600">{member.role}</div>
+                  {member.name === conversation.assignedTo && (
+                    <div className="text-xs text-blue-600 mt-1">Currently assigned</div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex gap-2 mt-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowTransferModal(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </>
   )
 }
 

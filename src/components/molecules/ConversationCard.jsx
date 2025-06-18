@@ -109,11 +109,19 @@ return (
                 <ApperIcon name={getStatusIcon(conversation?.status)} size={12} />
                 {conversation?.status || 'unknown'}
               </Badge>
-            </div>
+</div>
             
             <div className="flex items-center gap-1 text-xs text-surface-500">
               <ApperIcon name="User" size={12} />
-              {conversation?.assignedTo || 'Unassigned'}
+              <span className={conversation?.assignedTo ? 'text-surface-700' : 'text-surface-400'}>
+                {conversation?.assignedTo || 'Unassigned'}
+              </span>
+              {conversation?.transferredAt && (
+                <div className="ml-1 flex items-center gap-1 text-xs text-blue-600">
+                  <ApperIcon name="ArrowRightLeft" size={10} />
+                  <span>Transferred</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

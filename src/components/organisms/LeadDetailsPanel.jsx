@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { contactService } from '@/services'
+import { contactService, conversationService } from '@/services'
 import { toast } from 'react-toastify'
 import Avatar from '@/components/atoms/Avatar'
 import Badge from '@/components/atoms/Badge'
@@ -72,8 +72,15 @@ const LeadDetailsPanel = ({ conversation, onClose }) => {
     }
   }
 
-  const handleSave = async () => {
+const handleSave = async () => {
     try {
+      // Validate required fields
+      if (!formData.leadStage) {
+        toast.error('Lead stage is required')
+        return
+      }
+
+      const oldStage = contact.leadStatus
       const updatedContact = await contactService.update(contact.Id, {
         leadStatus: formData.leadStage,
         source: formData.source,
@@ -81,8 +88,25 @@ const LeadDetailsPanel = ({ conversation, onClose }) => {
         notes: formData.notes,
         tags: formData.tags
       })
+      
       setContact(updatedContact)
       setEditing(false)
+      
+      // Log stage change activity if stage changed
+      if (oldStage !== formData.leadStage && conversation?.Id) {
+        try {
+          await conversationService.addStatusChangeActivity(conversation.Id, {
+            type: 'lead_stage_change',
+            description: `Lead stage changed from ${oldStage} to ${formData.leadStage}`,
+            oldStage,
+            newStage: formData.leadStage,
+            agent: 'Current Agent' // Would come from auth context
+          })
+        } catch (err) {
+          console.error('Failed to log stage change:', err)
+        }
+      }
+      
       toast.success('Lead details updated successfully')
     } catch (err) {
       toast.error('Failed to update lead details')
@@ -186,56 +210,68 @@ const LeadDetailsPanel = ({ conversation, onClose }) => {
           </div>
         </div>
 
-        {/* Lead Information Form */}
+{/* Lead Information Form */}
         <div className="space-y-4">
           <h5 className="font-medium text-surface-900 flex items-center gap-2">
             <ApperIcon name="User" size={16} />
             Lead Information
           </h5>
           
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-surface-700 mb-1">Lead Stage</label>
+              <label className="block text-sm font-medium text-surface-700 mb-2">Lead Stage</label>
               {editing ? (
                 <select
                   value={formData.leadStage}
                   onChange={(e) => setFormData(prev => ({ ...prev, leadStage: e.target.value }))}
-                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
                 >
                   <option value="new">New</option>
                   <option value="contacted">Contacted</option>
                   <option value="qualified">Qualified</option>
-                  <option value="proposal">Proposal</option>
-                  <option value="closed">Closed Won</option>
-                  <option value="lost">Closed Lost</option>
+                  <option value="converted">Converted</option>
                 </select>
               ) : (
-                <Badge variant="primary" size="sm">
-                  {formData.leadStage}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge 
+                    variant={
+                      formData.leadStage === 'converted' ? 'success' :
+                      formData.leadStage === 'qualified' ? 'warning' :
+                      formData.leadStage === 'contacted' ? 'info' : 'error'
+                    } 
+                    size="sm"
+                  >
+                    {formData.leadStage === 'new' ? 'New Lead' :
+                     formData.leadStage === 'contacted' ? 'Contacted' :
+                     formData.leadStage === 'qualified' ? 'Qualified' :
+                     formData.leadStage === 'converted' ? 'Converted' : formData.leadStage}
+                  </Badge>
+                </div>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-surface-700 mb-1">Source</label>
+              <label className="block text-sm font-medium text-surface-700 mb-2">Source</label>
               {editing ? (
                 <Input
                   value={formData.source}
                   onChange={(e) => setFormData(prev => ({ ...prev, source: e.target.value }))}
-                  placeholder="e.g., Website, Referral, Ad Campaign"
+                  placeholder="e.g., Ad Campaign, Referral, Website"
                 />
               ) : (
-                <p className="text-sm text-surface-900">{formData.source || 'Not specified'}</p>
+                <p className="text-sm text-surface-900 bg-surface-50 px-3 py-2 rounded-lg">
+                  {formData.source || 'Not specified'}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-surface-700 mb-1">Priority</label>
+              <label className="block text-sm font-medium text-surface-700 mb-2">Priority</label>
               {editing ? (
                 <select
                   value={formData.priority}
                   onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value }))}
-                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -249,25 +285,50 @@ const LeadDetailsPanel = ({ conversation, onClose }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-surface-700 mb-1">Notes</label>
+              <label className="block text-sm font-medium text-surface-700 mb-2">Notes / Call Summary</label>
               {editing ? (
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                  placeholder="Add notes about this lead..."
-                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 h-20 resize-none"
+                  placeholder="Add notes about this lead or call summary..."
+                  className="w-full px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 h-24 resize-none"
                 />
               ) : (
-                <p className="text-sm text-surface-900">{formData.notes || 'No notes added'}</p>
+                <div className="bg-surface-50 px-3 py-2 rounded-lg min-h-[60px]">
+                  <p className="text-sm text-surface-900 whitespace-pre-wrap">
+                    {formData.notes || 'No notes added'}
+                  </p>
+                </div>
               )}
             </div>
 
             {editing && (
-              <div className="flex gap-2 pt-2">
-                <Button variant="primary" size="sm" onClick={handleSave}>
+              <div className="flex gap-2 pt-3 border-t border-surface-200">
+                <Button 
+                  variant="primary" 
+                  size="sm" 
+                  onClick={handleSave}
+                  className="flex-1"
+                  icon="Save"
+                >
                   Save Changes
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setEditing(false)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    setEditing(false)
+                    // Reset form data to original values
+                    setFormData({
+                      leadStage: contact?.leadStatus || 'new',
+                      source: contact?.source || '',
+                      priority: contact?.priority || 'medium',
+                      notes: contact?.notes || '',
+                      tags: contact?.tags || []
+                    })
+                  }}
+                  className="flex-1"
+                >
                   Cancel
                 </Button>
               </div>
