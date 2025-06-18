@@ -73,10 +73,10 @@ const Users = () => {
         toast.success('User created successfully')
       }
       setShowModal(false)
-    } catch (err) {
+} catch (err) {
       toast.error('Failed to save user')
     }
-}
+  }
 
   const toggleSelectUser = (userId) => {
     setSelectedUsers(prev => {
@@ -243,149 +243,135 @@ const Users = () => {
 
   return (
     <div className="p-6">
-      <div className="mb-6">
+    <div className="mb-6">
         <h1 className="text-2xl font-bold text-surface-900 mb-2">User Management</h1>
         <p className="text-surface-600">Manage users, roles, and permissions</p>
-      </div>
-
-{/* Header Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+    </div>
+    {/* Header Controls */}
+    <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1">
-          <Input
-            icon="Search"
-            placeholder="Search users..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+            <Input
+                icon="Search"
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)} />
         </div>
         <div className="flex gap-2">
-          <select
-            value={filterRole}
-            onChange={(e) => setFilterRole(e.target.value)}
-            className="px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            <option value="all">All Roles</option>
-            <option value="admin">Admin</option>
-            <option value="manager">Manager</option>
-            <option value="agent">Agent</option>
-          </select>
-          {selectedUsers.length > 0 && (
-            <>
-              <Button variant="outline" icon="Download" onClick={handleExport}>
-                Export ({selectedUsers.length})
-              </Button>
-              <Button variant="danger" icon="Trash2" onClick={handleBulkDelete}>
-                Delete ({selectedUsers.length})
-              </Button>
-            </>
-          )}
-          <Button icon="Plus" onClick={handleAddUser}>
-            Add User
-          </Button>
+            <select
+                value={filterRole}
+                onChange={e => setFilterRole(e.target.value)}
+                className="px-3 py-2 border border-surface-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <option value="all">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="agent">Agent</option>
+            </select>
+            {selectedUsers.length > 0 && <>
+                <Button variant="outline" icon="Download" onClick={handleExport}>Export ({selectedUsers.length})
+                                  </Button>
+                <Button variant="danger" icon="Trash2" onClick={handleBulkDelete}>Delete ({selectedUsers.length})
+                                  </Button>
+            </>}
+            <Button icon="Plus" onClick={handleAddUser}>Add User
+                          </Button>
         </div>
-      </div>
-      {/* Users Table */}
-      <div className="bg-white rounded-lg border border-surface-200 overflow-hidden">
+    </div>
+    {/* Users Table */}
+    <div className="bg-white rounded-lg border border-surface-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
-<thead className="bg-surface-50 border-b border-surface-200">
-              <tr>
-                <th className="text-left py-3 px-4 font-medium text-surface-700 w-12">
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={toggleSelectAll}
-                    className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20"
-                  />
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-surface-700">User</th>
-                <th className="text-left py-3 px-4 font-medium text-surface-700">Contact</th>
-                <th className="text-left py-3 px-4 font-medium text-surface-700">Role</th>
-                <th className="text-left py-3 px-4 font-medium text-surface-700">Status</th>
-                <th className="text-center py-3 px-4 font-medium text-surface-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <AnimatePresence>
-{filteredUsers.map((user, index) => (
-                  <motion.tr
-                    key={user.Id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border-b border-surface-100 hover:bg-surface-50"
-                  >
-                    <td className="py-4 px-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.Id)}
-                        onChange={() => toggleSelectUser(user.Id)}
-                        className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20"
-                      />
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar name={user.name} size="sm" />
-                        <div>
-                          <div className="font-medium text-surface-900">{user.name}</div>
-                          <div className="text-sm text-surface-500">ID: {user.Id}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div>
-                        <div className="text-surface-900">{user.email}</div>
-                        <div className="text-sm text-surface-500">{user.phone}</div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <Badge variant={getRoleBadgeVariant(user.role)}>
-                        {user.role}
-                      </Badge>
-                    </td>
-                    <td className="py-4 px-4">
-                      <Badge variant={getStatusBadgeVariant(user.status)}>
-                        {user.status}
-                      </Badge>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex justify-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          icon="Edit"
-                          onClick={() => handleEditUser(user)}
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          icon="Trash2"
-                          onClick={() => handleDeleteUser(user.Id)}
-                          className="text-error hover:text-error"
-                        />
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
-            </tbody>
-          </table>
+            <table className="w-full">
+                <thead className="bg-surface-50 border-b border-surface-200">
+                    <tr>
+                        <th className="text-left py-3 px-4 font-medium text-surface-700 w-12">
+                            <input
+                                type="checkbox"
+                                checked={selectAll}
+                                onChange={toggleSelectAll}
+                                className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20" />
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium text-surface-700">User</th>
+                        <th className="text-left py-3 px-4 font-medium text-surface-700">Contact</th>
+                        <th className="text-left py-3 px-4 font-medium text-surface-700">Role</th>
+                        <th className="text-left py-3 px-4 font-medium text-surface-700">Status</th>
+                        <th className="text-center py-3 px-4 font-medium text-surface-700">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <AnimatePresence>
+                        {filteredUsers.map((user, index) => <motion.tr
+                            key={user.Id}
+                            initial={{
+                                opacity: 0,
+                                y: 20
+                            }}
+                            animate={{
+                                opacity: 1,
+                                y: 0
+                            }}
+                            transition={{
+                                delay: index * 0.1
+                            }}
+                            className="border-b border-surface-100 hover:bg-surface-50">
+                            <td className="py-4 px-4">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedUsers.includes(user.Id)}
+                                    onChange={() => toggleSelectUser(user.Id)}
+                                    className="w-4 h-4 text-primary border-surface-300 rounded focus:ring-primary/20" />
+                            </td>
+                            <td className="py-4 px-4">
+                                <div className="flex items-center gap-3">
+                                    <Avatar name={user.name} size="sm" />
+                                    <div>
+                                        <div className="font-medium text-surface-900">{user.name}</div>
+                                        <div className="text-sm text-surface-500">ID: {user.Id}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="py-4 px-4">
+                                <div>
+                                    <div className="text-surface-900">{user.email}</div>
+                                    <div className="text-sm text-surface-500">{user.phone}</div>
+                                </div>
+                            </td>
+                            <td className="py-4 px-4">
+                                <Badge variant={getRoleBadgeVariant(user.role)}>
+                                    {user.role}
+                                </Badge>
+                            </td>
+                            <td className="py-4 px-4">
+                                <Badge variant={getStatusBadgeVariant(user.status)}>
+                                    {user.status}
+                                </Badge>
+                            </td>
+                            <td className="py-4 px-4">
+                                <div className="flex justify-center gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        icon="Edit"
+                                        onClick={() => handleEditUser(user)} />
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        icon="Trash2"
+                                        onClick={() => handleDeleteUser(user.Id)}
+                                        className="text-error hover:text-error" />
+                                </div>
+                            </td>
+                        </motion.tr>)}
+                    </AnimatePresence>
+                </tbody>
+            </table>
         </div>
-</div>
-
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <ApperIcon name="Users" size={48} className="text-surface-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-surface-900 mb-2">No users found</h3>
-            <p className="text-surface-600">
-              {searchQuery || filterRole !== 'all' 
-                ? 'Try adjusting your search or filters'
-                : 'Get started by adding your first user'
-              }
-            </p>
-          </div>
-        )}
-      </div>
+    </div>
+    {filteredUsers.length === 0 && <div className="text-center py-12">
+        <ApperIcon name="Users" size={48} className="text-surface-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-surface-900 mb-2">No users found</h3>
+        <p className="text-surface-600">
+            {searchQuery || filterRole !== "all" ? "Try adjusting your search or filters" : "Get started by adding your first user"}
+        </p>
+</div>}
 
       {/* Selected Users Summary */}
       {selectedUsers.length > 0 && (
@@ -407,12 +393,14 @@ const Users = () => {
           </div>
         </div>
       )}
+
       {/* User Modal */}
       <UserModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onSave={handleSaveUser}
-/>
+        user={editingUser}
+      />
 
       {/* Export Modal */}
       {showExportModal && (
