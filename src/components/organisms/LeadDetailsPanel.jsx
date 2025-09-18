@@ -8,6 +8,7 @@ import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import Input from "@/components/atoms/Input";
 import Avatar from "@/components/atoms/Avatar";
+import MessageThread from "@/components/organisms/MessageThread";
 import { getById, update } from "@/services/api/chatbotFlowService";
 
 const LeadDetailsPanel = ({ conversation, onClose }) => {

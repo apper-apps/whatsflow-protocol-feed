@@ -327,8 +327,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
                 />
               </div>
             </div>
-          </div>
-          </div>
+</div>
         </div>
       </div>
 
@@ -572,7 +571,6 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           </Button>
         </div>
       )}
-
 {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
@@ -594,8 +592,6 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                 className="text-surface-400 hover:text-surface-600"
               />
             </div>
-
-</div>
 
             {/* Modal Body */}
             <div className="p-6">
@@ -715,14 +711,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
               >
                 {modalType === 'assign' ? 'Assign' : modalType === 'reassign' ? 'Reassign' : 'Transfer'}
               </Button>
-            </div>
-
 </div>
-
-            {/* Audit Trail Preview */}
-</motion.div>
-        </div>
-      )}
           </motion.div>
         </div>
       )}
