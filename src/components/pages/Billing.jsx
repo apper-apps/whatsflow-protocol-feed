@@ -41,8 +41,7 @@ const Billing = () => {
   const [paymentMethods, setPaymentMethods] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [activeTab, setActiveTab] = useState('overview')
-
+const [activeTab, setActiveTab] = useState('overview')
   useEffect(() => {
     loadBillingData()
   }, [])
@@ -148,10 +147,11 @@ const Billing = () => {
       <div className="mb-6">
         <div className="border-b border-surface-200">
           <nav className="-mb-px flex space-x-8">
-            {[
+{[
               { id: 'overview', label: 'Overview', icon: 'CreditCard' },
               { id: 'invoices', label: 'Invoices', icon: 'FileText' },
-              { id: 'payment', label: 'Payment Methods', icon: 'Wallet' }
+              { id: 'payment', label: 'Payment Methods', icon: 'Wallet' },
+              { id: 'plans', label: 'Plans', icon: 'Package' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -392,6 +392,182 @@ const Billing = () => {
               <Button icon="Plus">Add Payment Method</Button>
             </div>
           )}
+</div>
+      )}
+
+      {/* Plans Tab */}
+      {activeTab === 'plans' && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-semibold text-surface-900">WhatsApp Platform Subscription Plans</h3>
+              <p className="text-sm text-surface-600">Choose the perfect plan for your business needs</p>
+            </div>
+          </div>
+
+          {/* Subscription Plans */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Monthly Plan */}
+            <div className="bg-white border border-surface-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div className="text-center mb-6">
+                <h4 className="text-xl font-semibold text-surface-900 mb-2">Monthly Plan</h4>
+                <p className="text-sm text-surface-600">Perfect for getting started</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Marketing</span>
+                  <span className="text-sm font-semibold text-surface-900">₹0.88</span>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Authentication</span>
+                  <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Utility</span>
+                  <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+                </div>
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-sm font-medium text-surface-700">Service</span>
+                  <Badge variant="success" className="text-xs">FREE</Badge>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <Button className="w-full">
+                  <ApperIcon name="CreditCard" size={16} className="mr-2" />
+                  Choose Monthly
+                </Button>
+              </div>
+            </div>
+
+            {/* Half Yearly Plan */}
+            <div className="bg-white border-2 border-primary rounded-lg p-6 hover:shadow-md transition-shadow relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge variant="primary" className="text-xs px-3 py-1">POPULAR</Badge>
+              </div>
+              
+              <div className="text-center mb-6">
+                <h4 className="text-xl font-semibold text-surface-900 mb-2">Half Yearly Plan</h4>
+                <p className="text-sm text-surface-600">Best value for growing businesses</p>
+                <div className="mt-2">
+                  <Badge variant="success" className="text-xs">Save 15%</Badge>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Marketing</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.75</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.88</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Authentication</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.11</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Utility</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.11</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-sm font-medium text-surface-700">Service</span>
+                  <Badge variant="success" className="text-xs">FREE</Badge>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <Button className="w-full" variant="primary">
+                  <ApperIcon name="CreditCard" size={16} className="mr-2" />
+                  Choose Half Yearly
+                </Button>
+              </div>
+            </div>
+
+            {/* Yearly Plan */}
+            <div className="bg-white border border-surface-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div className="text-center mb-6">
+                <h4 className="text-xl font-semibold text-surface-900 mb-2">Yearly Plan</h4>
+                <p className="text-sm text-surface-600">Maximum savings for enterprises</p>
+                <div className="mt-2">
+                  <Badge variant="warning" className="text-xs">Save 25%</Badge>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Marketing</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.66</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.88</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Authentication</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.10</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Utility</span>
+                  <div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.10</span>
+                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-sm font-medium text-surface-700">Service</span>
+                  <Badge variant="success" className="text-xs">FREE</Badge>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <Button className="w-full" variant="outline">
+                  <ApperIcon name="CreditCard" size={16} className="mr-2" />
+                  Choose Yearly
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Plan Features */}
+          <div className="bg-surface-50 rounded-lg p-6">
+            <h4 className="text-lg font-semibold text-surface-900 mb-4">What's Included</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">Unlimited WhatsApp API access</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">24/7 customer support</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">Advanced analytics dashboard</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">Multi-user collaboration</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">Template management</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ApperIcon name="Check" size={16} className="text-primary" />
+                <span className="text-sm text-surface-700">Contact organization</span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
