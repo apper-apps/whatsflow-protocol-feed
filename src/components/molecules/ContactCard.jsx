@@ -61,7 +61,6 @@ const ContactCard = ({ contact, onEdit, onDelete, onViewConversations, ...props 
           />
         </div>
       </div>
-)}
 
       {/* CRM Status */}
       <div className="flex items-center justify-between mb-3">
