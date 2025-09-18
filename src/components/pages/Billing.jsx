@@ -409,12 +409,16 @@ const [activeTab, setActiveTab] = useState('overview')
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Monthly Plan */}
             <div className="bg-white border border-surface-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <div className="text-center mb-6">
+<div className="text-center mb-6">
                 <h4 className="text-xl font-semibold text-surface-900 mb-2">Monthly Plan</h4>
                 <p className="text-sm text-surface-600">Perfect for getting started</p>
               </div>
               
               <div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Platform Rental</span>
+                  <span className="text-sm font-semibold text-surface-900">₹800/month</span>
+                </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Marketing</span>
                   <span className="text-sm font-semibold text-surface-900">₹0.88</span>
@@ -455,7 +459,11 @@ const [activeTab, setActiveTab] = useState('overview')
                 </div>
               </div>
               
-              <div className="space-y-4">
+<div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Platform Rental</span>
+                  <span className="text-sm font-semibold text-surface-900">₹600/month</span>
+                </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Marketing</span>
                   <div className="text-right">
@@ -501,7 +509,11 @@ const [activeTab, setActiveTab] = useState('overview')
                 </div>
               </div>
               
-              <div className="space-y-4">
+<div className="space-y-4">
+                <div className="flex justify-between items-center py-3 border-b border-surface-100">
+                  <span className="text-sm font-medium text-surface-700">Platform Rental</span>
+                  <span className="text-sm font-semibold text-surface-900">₹400/month</span>
+                </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Marketing</span>
                   <div className="text-right">
