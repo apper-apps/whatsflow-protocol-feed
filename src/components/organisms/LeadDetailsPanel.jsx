@@ -425,7 +425,7 @@ return (
             </Badge>
           </div>
           
-          <div className="p-6">
+<div className="p-6">
             {activities.length === 0 ? (
               <div className="text-center py-12">
                 <ApperIcon name="Clock" size={48} className="text-surface-400 mx-auto mb-4 opacity-50" />
@@ -437,72 +437,70 @@ return (
                 {activities.map(activity => (
                   <motion.div
                     key={activity.id}
-                                className="relative border-l-2 border-surface-200 pl-6 pb-6 last:pb-0"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {/* Activity Icon */}
-                                <div className={`absolute -left-3 w-6 h-6 rounded-full flex items-center justify-center shadow-sm ${getActivityColor(activity.type)}`}>
-                                    <ApperIcon name={getActivityIcon(activity.type)} size={12} />
-                                </div>
-                                
-                                {/* Activity Content */}
-                                <div className="space-y-3">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <h6 className="font-medium text-surface-900 flex items-center gap-2">
-                                                {activity.title}
-                                                {activity.priority && (
-                                                    <div className={`w-2 h-2 rounded-full ${getPriorityColor(activity.priority) === "text-red-600" ? "bg-red-500" : getPriorityColor(activity.priority) === "text-yellow-600" ? "bg-yellow-500" : "bg-green-500"}`} />
-                                                )}
-                                            </h6>
-                                            <p className="text-sm text-surface-600 mt-1">{activity.description}</p>
-                                        </div>
-                                        <Badge variant="outline" size="sm" className="capitalize">
-                                            {activity.type}
-                                        </Badge>
-                                    </div>
-
-                                    {/* Activity Details */}
-                                    {activity.details && (
-                                        <div className="bg-surface-50 rounded-lg p-4 space-y-2 border border-surface-200">
-                                            {activity.type === "call" && activity.details.duration && (
-                                                <div className="flex items-center gap-2 text-sm text-surface-600">
-                                                    <ApperIcon name="Clock" size={14} />
-                                                    Duration: {activity.details.duration}
-                                                    {activity.details.outcome && (
-                                                        <>
-                                                            <span>•</span>
-                                                            <span className="capitalize">{activity.details.outcome.replace("_", " ")}</span>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            )}
-                                            
-                                            {(activity.type === "call" && activity.details.notes || 
-                                              activity.type === "chat" && activity.details.summary || 
-                                              activity.type === "note" && activity.details.content || 
-                                              activity.type === "ticket" && activity.details.resolution) && (
-                                                <div className="text-sm text-surface-700 bg-white rounded-lg p-3 border border-surface-200">
-                                                    {activity.details.notes || activity.details.summary || activity.details.content || activity.details.resolution}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {/* Activity Meta */}
-                                    <div className="flex items-center gap-2 text-sm text-surface-500">
-                                        <span>{formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}</span>
-                                        <span>•</span>
-                                        <span className="font-medium">{activity.agent}</span>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
+                    className="relative border-l-2 border-surface-200 pl-6 pb-6 last:pb-0"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {/* Activity Icon */}
+                    <div className={`absolute -left-3 w-6 h-6 rounded-full flex items-center justify-center shadow-sm ${getActivityColor(activity.type)}`}>
+                      <ApperIcon name={getActivityIcon(activity.type)} size={12} />
                     </div>
-                )}
-</div>
+                    
+                    {/* Activity Content */}
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h6 className="font-medium text-surface-900 flex items-center gap-2">
+                            {activity.title}
+                            {activity.priority && (
+                              <div className={`w-2 h-2 rounded-full ${getPriorityColor(activity.priority) === "text-red-600" ? "bg-red-500" : getPriorityColor(activity.priority) === "text-yellow-600" ? "bg-yellow-500" : "bg-green-500"}`} />
+                            )}
+                          </h6>
+                          <p className="text-sm text-surface-600 mt-1">{activity.description}</p>
+                        </div>
+                        <Badge variant="outline" size="sm" className="capitalize">
+                          {activity.type}
+                        </Badge>
+                      </div>
+
+                      {/* Activity Details */}
+                      {activity.details && (
+                        <div className="bg-surface-50 rounded-lg p-4 space-y-2 border border-surface-200">
+                          {activity.type === "call" && activity.details.duration && (
+                            <div className="flex items-center gap-2 text-sm text-surface-600">
+                              <ApperIcon name="Clock" size={14} />
+                              Duration: {activity.details.duration}
+                              {activity.details.outcome && (
+                                <>
+                                  <span>•</span>
+                                  <span className="capitalize">{activity.details.outcome.replace("_", " ")}</span>
+                                </>
+                              )}
+                            </div>
+                          )}
+                          
+                          {(activity.type === "call" && activity.details.notes || 
+                            activity.type === "chat" && activity.details.summary || 
+                            activity.type === "note" && activity.details.content || 
+                            activity.type === "ticket" && activity.details.resolution) && (
+                            <div className="text-sm text-surface-700 bg-white rounded-lg p-3 border border-surface-200">
+                              {activity.details.notes || activity.details.summary || activity.details.content || activity.details.resolution}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Activity Meta */}
+                      <div className="flex items-center gap-2 text-sm text-surface-500">
+                        <span>{formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}</span>
+                        <span>•</span>
+                        <span className="font-medium">{activity.agent}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             )}
           </div>
         </div>
