@@ -466,23 +466,20 @@ const [activeTab, setActiveTab] = useState('overview')
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Marketing</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.75</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.88</div>
+<div className="text-right">
+                    <span className="text-sm font-semibold text-surface-900">₹0.88</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Authentication</span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.11</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Utility</span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.11</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3">
@@ -515,24 +512,21 @@ const [activeTab, setActiveTab] = useState('overview')
                   <span className="text-sm font-semibold text-surface-900">₹400/month</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Marketing</span>
+<span className="text-sm font-medium text-surface-700">Marketing</span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.66</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.88</div>
+                    <span className="text-sm font-semibold text-surface-900">₹0.88</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Authentication</span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.10</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Utility</span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.10</span>
-                    <div className="text-xs text-surface-500 line-through">₹0.13</div>
+                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center py-3">
