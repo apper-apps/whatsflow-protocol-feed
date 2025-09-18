@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { contactService, conversationService, messageService, userService } from "@/services";
-import MessageBubble from "@/components/molecules/MessageBubble";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import SkeletonLoader from "@/components/atoms/SkeletonLoader";
 import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 import Input from "@/components/atoms/Input";
 import Avatar from "@/components/atoms/Avatar";
-import Badge from "@/components/atoms/Badge";
-import SkeletonLoader from "@/components/atoms/SkeletonLoader";
 import ErrorState from "@/components/organisms/ErrorState";
-import ApperIcon from "@/components/ApperIcon";
-import { toast } from "react-toastify";
+import Templates from "@/components/pages/Templates";
+import MessageBubble from "@/components/molecules/MessageBubble";
+import { create, getAll, getById } from "@/services/api/chatbotFlowService";
 const MessageThread = ({ conversation, onStatusChange, onShowLeadDetails, showLeadPanel }) => {
   const [messages, setMessages] = useState([])
   const [contact, setContact] = useState(null)
@@ -260,53 +262,72 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
             </div>
           </div>
           
-<div className="flex items-center gap-2">
-            <Badge variant={getStatusVariant(conversation.status)}>
+<div className="flex items-center justify-between">
+            <Badge variant={getStatusVariant(conversation.status)} className="px-3 py-1">
               {conversation.status}
             </Badge>
             
             {/* Header Actions */}
-            <div className="flex items-center gap-1 ml-2">
-              {conversation.status !== 'resolved' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  icon="CheckCircle"
-                  onClick={() => handleStatusChange('resolved')}
-                >
-                  Resolve
-                </Button>
-              )}
-              {conversation.status === 'resolved' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  icon="RotateCcw"
-                  onClick={() => handleStatusChange('ongoing')}
-                >
-                  Reopen
-                </Button>
-              )}
-<AssignmentButton 
+            <div className="flex items-center gap-2">
+              {/* Status Actions */}
+              <div className="flex items-center gap-1">
+                {conversation.status !== 'resolved' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon="CheckCircle"
+                    onClick={() => handleStatusChange('resolved')}
+                    className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                  >
+                    Resolve
+                  </Button>
+                )}
+                {conversation.status === 'resolved' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon="RotateCcw"
+                    onClick={() => handleStatusChange('ongoing')}
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                  >
+                    Reopen
+                  </Button>
+                )}
+              </div>
+
+              {/* Separator */}
+              <div className="w-px h-6 bg-surface-200"></div>
+
+              {/* Assignment Actions */}
+              <AssignmentButton 
                 conversation={conversation}
                 onAssign={handleAssignAgent}
                 onTransfer={handleTransferChat}
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                icon="User"
-                onClick={onShowLeadDetails}
-                className="xl:hidden"
-              >
-                Lead Details
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                icon="MoreVertical"
-              />
+
+              {/* Separator */}
+              <div className="w-px h-6 bg-surface-200"></div>
+
+              {/* Secondary Actions */}
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="User"
+                  onClick={onShowLeadDetails}
+                  className="xl:hidden text-surface-600 hover:text-surface-900 hover:bg-surface-50"
+                >
+                  Lead Details
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="MoreVertical"
+                  className="text-surface-600 hover:text-surface-900 hover:bg-surface-50"
+                />
+              </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -530,12 +551,13 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           Assign
         </Button>
       ) : (
-        <div className="flex items-center gap-1">
+<div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             icon="UserCheck"
             onClick={() => handleOpenModal('reassign')}
+            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
             Reassign
           </Button>
@@ -544,97 +566,136 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             size="sm"
             icon="ArrowRightLeft"
             onClick={() => handleOpenModal('transfer')}
+            className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
           >
             Transfer
           </Button>
         </div>
       )}
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+{showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-lg p-6 w-full max-w-lg mx-4"
+            className="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-surface-900">{getModalTitle()}</h3>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-surface-200">
+              <div>
+                <h3 className="text-xl font-semibold text-surface-900">{getModalTitle()}</h3>
+                <p className="text-sm text-surface-600 mt-1">{getModalDescription()}</p>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 icon="X"
                 onClick={() => setShowModal(false)}
+                className="text-surface-400 hover:text-surface-600"
               />
             </div>
 
-            <p className="text-sm text-surface-600 mb-4">
-              {getModalDescription()}
-            </p>
+</div>
+
+            {/* Modal Body */}
+            <div className="p-6">
 
             {/* Current Assignment Info */}
-            {conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
-              <div className="bg-surface-50 p-3 rounded-lg mb-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <ApperIcon name="User" size={16} className="text-surface-500" />
-                  <span className="text-surface-600">Currently assigned to:</span>
-                  <span className="font-medium text-surface-900">{conversation.assignedTo}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Agent Selection */}
-            <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
-              {teamMembers.map((member) => (
-                <button
-                  key={member.Id}
-                  onClick={() => setSelectedAgent(member)}
-                  disabled={loading || member.name === conversation.assignedTo}
-                  className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                    selectedAgent?.Id === member.Id
-                      ? 'border-primary bg-primary/5'
-                      : 'border-surface-200 hover:bg-surface-50'
-                  } ${
-                    member.name === conversation.assignedTo
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-surface-900">{member.name}</div>
-                      <div className="text-sm text-surface-600 capitalize">{member.role}</div>
+{conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <ApperIcon name="User" size={16} className="text-blue-600" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${
-                        member.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
-                      }`} />
-                      {member.name === conversation.assignedTo && (
-                        <span className="text-xs text-blue-600">Current</span>
-                      )}
-                      {selectedAgent?.Id === member.Id && (
-                        <ApperIcon name="Check" size={16} className="text-primary" />
-                      )}
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Currently Assigned</p>
+                      <p className="text-sm text-blue-700">{conversation.assignedTo}</p>
                     </div>
                   </div>
-                </button>
-              ))}
+                </div>
+              )}
+
+            {/* Agent Selection */}
+{/* Team Member Selection */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-surface-900 mb-3">
+                  Select Team Member
+                </label>
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {teamMembers.map((member) => (
+                    <button
+                      key={member.Id}
+                      onClick={() => setSelectedAgent(member)}
+                      disabled={loading || member.name === conversation.assignedTo}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                        selectedAgent?.Id === member.Id
+                          ? 'border-primary bg-primary/5 shadow-sm'
+                          : 'border-surface-200 hover:border-surface-300 hover:bg-surface-50'
+                      } ${
+                        member.name === conversation.assignedTo
+                          ? 'opacity-50 cursor-not-allowed'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${
+                            member.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                          }`} />
+                          <div>
+                            <div className="font-medium text-surface-900">{member.name}</div>
+                            <div className="text-sm text-surface-600 capitalize">{member.role}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {member.name === conversation.assignedTo && (
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">Current</span>
+                          )}
+                          {selectedAgent?.Id === member.Id && (
+                            <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                              <ApperIcon name="Check" size={14} className="text-white" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+{/* Assignment Reason */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-surface-900 mb-2">
+                  Reason (Optional)
+                </label>
+                <Input
+                  placeholder={`Add a reason for ${modalType}...`}
+                  value={assignmentReason}
+                  onChange={(e) => setAssignmentReason(e.target.value)}
+                  disabled={loading}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Preview Section */}
+              {selectedAgent && (
+                <div className="mb-6 p-4 bg-surface-50 rounded-lg border border-surface-200">
+                  <div className="text-sm font-medium text-surface-900 mb-2">Action Preview</div>
+                  <div className="text-sm text-surface-700">
+                    {modalType === 'assign' 
+                      ? `Will assign conversation to ${selectedAgent.name}`
+                      : `Will ${modalType} conversation from ${conversation.assignedTo} to ${selectedAgent.name}`
+                    }
+                    {assignmentReason && (
+                      <span className="block mt-1 text-surface-600 italic">Reason: {assignmentReason}</span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Assignment Reason (Optional) */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-surface-700 mb-2">
-                Reason (Optional)
-              </label>
-              <Input
-                placeholder={`Reason for ${modalType}...`}
-                value={assignmentReason}
-                onChange={(e) => setAssignmentReason(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2">
+            {/* Modal Footer */}
+            <div className="flex gap-3 p-6 border-t border-surface-200 bg-surface-50 rounded-b-xl">
               <Button
                 variant="outline"
                 size="sm"
@@ -656,19 +717,12 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
               </Button>
             </div>
 
+</div>
+
             {/* Audit Trail Preview */}
-            {selectedAgent && (
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <div className="text-xs text-blue-800 font-medium mb-1">Audit Trail Preview:</div>
-                <div className="text-xs text-blue-700">
-                  {modalType === 'assign' 
-                    ? `Will assign conversation to ${selectedAgent.name}`
-                    : `Will ${modalType} conversation from ${conversation.assignedTo} to ${selectedAgent.name}`
-                  }
-                  {assignmentReason && ` (Reason: ${assignmentReason})`}
-                </div>
-              </div>
-            )}
+</motion.div>
+        </div>
+      )}
           </motion.div>
         </div>
       )}
