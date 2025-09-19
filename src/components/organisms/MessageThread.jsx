@@ -672,9 +672,9 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           </motion.div>
         </div>
       )}
+)}
     </>
   )
-}
 }
 
 export default MessageThread
