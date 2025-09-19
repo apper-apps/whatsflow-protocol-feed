@@ -44,11 +44,10 @@ templates: {
     icon: 'BarChart3',
     component: Analytics
   },
-  settings: {
+settings: {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
-path: '/settings',
     icon: 'Settings',
     component: Settings
   },

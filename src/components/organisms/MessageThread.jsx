@@ -238,7 +238,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
           onRetry={loadMessages}
         />
       </div>
-    )
+)
   }
 
   return (
@@ -262,7 +262,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
             </div>
           </div>
           
-<div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <Badge variant={getStatusVariant(conversation.status)} className="px-3 py-1">
               {conversation.status}
             </Badge>
@@ -298,16 +298,6 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
               {/* Separator */}
               <div className="w-px h-6 bg-surface-200"></div>
 
-              {/* Assignment Actions */}
-              <AssignmentButton 
-                conversation={conversation}
-                onAssign={handleAssignAgent}
-                onTransfer={handleTransferChat}
-              />
-
-              {/* Separator */}
-              <div className="w-px h-6 bg-surface-200"></div>
-
               {/* Secondary Actions */}
               <div className="flex items-center gap-1">
                 <Button
@@ -327,7 +317,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
                 />
               </div>
             </div>
-</div>
+          </div>
         </div>
       </div>
 
@@ -355,116 +345,85 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
         <div ref={messagesEndRef} />
       </div>
 
-{/* Typing Indicator */}
-      {isTyping && (
-        <div className="px-4 py-2 border-t border-surface-200 bg-surface-50">
-          <div className="flex items-center gap-2 text-sm text-surface-600">
-            <div className="flex gap-1">
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-            <span>{contact?.name} is typing...</span>
-          </div>
-        </div>
-      )}
-
       {/* Message Input */}
-      <div className="p-4 border-t border-surface-200 bg-white">
-        {/* Attachment Preview */}
-        {attachments.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {attachments.map((attachment, index) => (
-              <div key={index} className="relative bg-surface-100 rounded-lg p-2 flex items-center gap-2">
-                <ApperIcon name="File" size={16} className="text-surface-600" />
-                <span className="text-sm text-surface-700">{attachment.name}</span>
-                <button
-                  onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
-                  className="text-surface-400 hover:text-surface-600"
-                >
-                  <ApperIcon name="X" size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <form onSubmit={handleSendMessage} className="space-y-3">
-          {/* Quick Actions Bar */}
-          <div className="flex items-center gap-2 pb-2 border-b border-surface-100">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              icon="Smile"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+      <div className="border-t border-surface-200 p-4">
+        <form onSubmit={handleSendMessage} className="flex items-end gap-3">
+          <div className="flex-1">
+            <textarea
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              rows="1"
+              className="w-full px-4 py-3 border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+              style={{ minHeight: '48px', maxHeight: '120px' }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  handleSendMessage(e)
+                }
+              }}
             />
+          </div>
+          
+          <div className="flex items-center gap-2">
             <Button
-              type="button"
               variant="ghost"
               size="sm"
               icon="Paperclip"
+              className="text-surface-600 hover:text-surface-900"
               onClick={() => fileInputRef.current?.click()}
-              disabled={sending}
             />
             <Button
-              type="button"
-              variant="ghost"
+              variant="ghost" 
               size="sm"
-              icon="MessageSquareText"
-              disabled={sending}
-            >
-              Templates
-            </Button>
-            <div className="flex-1"></div>
-            <span className="text-xs text-surface-400">
-              {newMessage.length}/1000
-            </span>
-          </div>
-
-          {/* Message Input Row */}
-          <div className="flex items-end gap-3">
-            <div className="flex-1">
-              <Input
-                placeholder="Type a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                disabled={sending}
-                maxLength={1000}
-              />
-            </div>
-            
+              icon="Smile"
+              className="text-surface-600 hover:text-surface-900"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            />
             <Button
+              type="submit"
               variant="primary"
               size="sm"
               icon="Send"
-              type="submit"
               disabled={!newMessage.trim() || sending}
-              loading={sending}
+              className="px-4"
             >
-              Send
+              {sending ? 'Sending...' : 'Send'}
             </Button>
           </div>
         </form>
-
-        {/* Hidden File Input */}
+        
         <input
           ref={fileInputRef}
           type="file"
           multiple
-          accept="image/*,video/*,.pdf,.doc,.docx"
+          className="hidden"
           onChange={(e) => {
-            const files = Array.from(e.target.files)
+            // Handle file attachments
+            const files = Array.from(e.target.files || [])
             setAttachments(prev => [...prev, ...files])
           }}
-          className="hidden"
-        />
+/>
+
+        {/* Typing Indicator */}
+        {isTyping && (
+          <div className="px-4 py-2 border-t border-surface-200 bg-surface-50">
+            <div className="flex items-center gap-2 text-sm text-surface-600">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+              <span>{contact?.name} is typing...</span>
+            </div>
+          </div>
+        )}
       </div>
-</div>
+    </div>
   )
 }
 
-// Assignment and Transfer Button Component
+// Assignment Button Component
 const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
   const [showModal, setShowModal] = useState(false)
   const [modalType, setModalType] = useState('assign') // 'assign', 'reassign', 'transfer'
@@ -479,7 +438,6 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
 
   const loadTeamMembers = async () => {
     try {
-      // Using userService to get team members instead of contactService
       const members = await userService.getAll()
       const activeMembers = members.filter(member => 
         member.status === 'active' && 
@@ -550,7 +508,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           Assign
         </Button>
       ) : (
-<div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -571,7 +529,8 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           </Button>
         </div>
       )}
-{showModal && (
+
+      {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -595,9 +554,8 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
 
             {/* Modal Body */}
             <div className="p-6">
-
-            {/* Current Assignment Info */}
-{conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
+              {/* Current Assignment Info */}
+              {conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -611,8 +569,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                 </div>
               )}
 
-            {/* Agent Selection */}
-{/* Team Member Selection */}
+              {/* Team Member Selection */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-surface-900 mb-3">
                   Select Team Member
@@ -659,7 +616,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                 </div>
               </div>
 
-{/* Assignment Reason */}
+              {/* Assignment Reason */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-surface-900 mb-2">
                   Reason (Optional)
@@ -711,12 +668,13 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
               >
                 {modalType === 'assign' ? 'Assign' : modalType === 'reassign' ? 'Reassign' : 'Transfer'}
               </Button>
-</div>
+            </div>
           </motion.div>
         </div>
       )}
     </>
   )
+}
 }
 
 export default MessageThread

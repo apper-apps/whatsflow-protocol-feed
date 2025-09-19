@@ -129,7 +129,9 @@ return (
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-surface-900">CRM Inbox</h2>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-surface-500">{filteredConversations.length}</span>
+            <span className="text-sm text-surface-500">
+              {Array.isArray(filteredConversations) ? filteredConversations.length : 0}
+            </span>
           </div>
         </div>
         
@@ -156,45 +158,48 @@ return (
           </button>
         </div>
       </div>
-{/* Conversation List */}
+
+      {/* Conversation List */}
       <div className="flex-1 overflow-y-auto">
         <AnimatePresence>
-          <>
-            {filteredConversations.length === 0 ? (
-              <div className="flex items-center justify-center h-full p-4">
-                <EmptyState 
-                  title="No matches found"
-                  description="Try adjusting your search or filters"
-                  actionLabel="Clear Search"
-                  onAction={() => setSearchQuery('')}
-                />
-              </div>
-            ) : (
-              filteredConversations?.map((conversation, index) => {
-                // Safe contact lookup with null checks
-                const contact = contacts?.find(c => c?.Id === conversation?.contactId) || null
-                
-                // Skip rendering if conversation is invalid
-                if (!conversation?.Id) return null
-                
-                return (
-                  <motion.div
-                    key={conversation.Id}
-                    initial={staggerItemInitial}
-                    animate={staggerItemAnimate}
-                    transition={getStaggerTransition(index)}
-                  >
-                    <ConversationCard
-                      conversation={conversation}
-                      contact={contact}
-                      isActive={selectedConversationId === conversation.Id}
-                      onClick={() => handleConversationClick(conversation)}
-                    />
-                  </motion.div>
-                )
-              }).filter(Boolean) || []
-            )}
-          </>
+          {!Array.isArray(filteredConversations) || filteredConversations.length === 0 ? (
+            <div className="flex items-center justify-center h-full p-4">
+              <EmptyState 
+                title="No matches found"
+                description="Try adjusting your search or filters"
+                actionLabel="Clear Search"
+                onAction={() => setSearchQuery('')}
+              />
+            </div>
+          ) : (
+            filteredConversations.map((conversation, index) => {
+              // Skip if conversation is invalid
+              if (!conversation || typeof conversation.Id === 'undefined') {
+                return null;
+              }
+
+              // Safe contact lookup with null checks
+              const contact = Array.isArray(contacts) 
+                ? contacts.find(c => c && c.Id === conversation.contactId) 
+                : null;
+              
+              return (
+                <motion.div
+                  key={`conversation-${conversation.Id}`}
+                  initial={staggerItemInitial}
+                  animate={staggerItemAnimate}
+                  transition={getStaggerTransition(index)}
+                >
+                  <ConversationCard
+                    conversation={conversation}
+                    contact={contact}
+                    isActive={selectedConversationId === conversation.Id}
+                    onClick={() => handleConversationClick(conversation)}
+                  />
+                </motion.div>
+              );
+            }).filter(Boolean)
+          )}
         </AnimatePresence>
       </div>
     </div>
