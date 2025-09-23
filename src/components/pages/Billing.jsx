@@ -119,6 +119,39 @@ setError(null)
       style: 'currency',
       currency: 'USD'
     }).format(amount / 100)
+}
+
+  // Helper function for calculating plan totals
+  const calculatePlanTotal = (planType) => {
+    const quantities = creditQuantities[planType]
+    const rates = {
+      monthly: { platform: 800, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+      halfYearly: { platform: 600, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+      yearly: { platform: 400, marketing: 0.88, authentication: 0.13, utility: 0.13 }
+    }
+    
+    const planRates = rates[planType]
+    const creditsTotal = (quantities.marketing * planRates.marketing) + 
+                       (quantities.authentication * planRates.authentication) + 
+                       (quantities.utility * planRates.utility)
+    
+    return {
+      platform: planRates.platform,
+      credits: creditsTotal,
+      total: planRates.platform + creditsTotal
+    }
+  }
+
+  // Helper function for updating credit quantities
+  const updateCreditQuantity = (planType, creditType, value) => {
+    const numValue = Math.max(0, parseInt(value) || 0)
+    setCreditQuantities(prev => ({
+      ...prev,
+      [planType]: {
+        ...prev[planType],
+        [creditType]: numValue
+      }
+    }))
   }
 
   if (loading) {
@@ -585,42 +618,6 @@ setError(null)
               <p className="text-sm text-surface-600">Choose the perfect plan for your business needs and select your credit requirements</p>
             </div>
           </div>
-
-          {/* Credit Pricing Helper Function */}
-          {(() => {
-            const calculatePlanTotal = (planType) => {
-              const quantities = creditQuantities[planType]
-              const rates = {
-                monthly: { platform: 800, marketing: 0.88, authentication: 0.13, utility: 0.13 },
-                halfYearly: { platform: 600, marketing: 0.88, authentication: 0.13, utility: 0.13 },
-                yearly: { platform: 400, marketing: 0.88, authentication: 0.13, utility: 0.13 }
-              }
-              
-              const planRates = rates[planType]
-              const creditsTotal = (quantities.marketing * planRates.marketing) + 
-                                 (quantities.authentication * planRates.authentication) + 
-                                 (quantities.utility * planRates.utility)
-              
-              return {
-                platform: planRates.platform,
-                credits: creditsTotal,
-                total: planRates.platform + creditsTotal
-              }
-            }
-
-            const updateCreditQuantity = (planType, creditType, value) => {
-              const numValue = Math.max(0, parseInt(value) || 0)
-              setCreditQuantities(prev => ({
-                ...prev,
-                [planType]: {
-                  ...prev[planType],
-                  [creditType]: numValue
-                }
-              }))
-            }
-
-            return null
-          })()}
 
           {/* Subscription Plans */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
