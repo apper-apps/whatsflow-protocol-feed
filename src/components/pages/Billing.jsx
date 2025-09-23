@@ -238,9 +238,9 @@ const loadBillingData = async () => {
                 <Button>View Plans</Button>
               </div>
             )}
-          </div>
-
 </div>
+
+          {/* Credit Balance & Validity Section */}
           <div className="bg-white rounded-lg border border-surface-200 p-6 mb-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
