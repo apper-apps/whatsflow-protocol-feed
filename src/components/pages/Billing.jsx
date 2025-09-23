@@ -6,7 +6,6 @@ import { billingService } from "@/services";
 import ApperIcon from "@/components/ApperIcon";
 import Contacts from "@/components/pages/Contacts";
 import Input from "@/components/atoms/Input";
-import Input from "@/components/atoms/Input";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 const safeFormatDate = (dateString, formatString = 'MMM dd, yyyy') => {
