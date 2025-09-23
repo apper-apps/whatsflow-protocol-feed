@@ -57,9 +57,8 @@ const Inbox = () => {
             onSelectConversation={handleConversationSelect}
           />
         </div>
-        
-        {/* Message Thread */}
-        <div className={`${showLeadPanel ? 'flex-1' : 'flex-1'} border-r border-gray-200`}>
+{/* Message Thread */}
+        <div className={`${showLeadPanel ? 'w-0 flex-1 min-w-0' : 'flex-1'} border-r border-surface-200`}>
           <MessageThread
             conversation={selectedConversation}
             onStatusChange={handleStatusChange}
