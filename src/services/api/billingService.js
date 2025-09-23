@@ -119,9 +119,17 @@ services: 0
           }
         })
       }, 200)
-    })
-},
+})
+  },
 
+  // Get credits data
+  async getCredits() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockData.credits || [])
+      }, 100)
+    })
+  },
   // Get service usage data
   async getServiceUsage() {
     try {
