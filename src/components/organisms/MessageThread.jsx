@@ -671,7 +671,6 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             </div>
           </motion.div>
         </div>
-      )}
 )}
     </>
   )
