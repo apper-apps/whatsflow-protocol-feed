@@ -120,6 +120,36 @@ services: 0
         })
       }, 200)
     })
+},
+
+  // Get service usage data
+  async getServiceUsage() {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { ...mockData.serviceUsage };
+    } catch (error) {
+      throw new Error('Failed to fetch service usage');
+    }
+  },
+
+  // Get credit balances
+  async getCreditBalances() {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { ...mockData.creditBalances };
+    } catch (error) {
+      throw new Error('Failed to fetch credit balances');
+    }
+  },
+
+  // Get validity periods
+  async getValidityPeriods() {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { ...mockData.validityPeriods };
+    } catch (error) {
+      throw new Error('Failed to fetch validity periods');
+    }
   }
 }
 

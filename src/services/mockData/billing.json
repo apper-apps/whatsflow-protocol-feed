@@ -8,6 +8,58 @@
     "nextBilling": "2024-03-15T00:00:00Z",
     "createdAt": "2024-02-15T00:00:00Z"
   },
+  "serviceUsage": {
+    "marketing": {
+      "used": 1247,
+      "limit": 2000,
+      "percentage": 62.35,
+      "resetDate": "2024-03-15T00:00:00Z"
+    },
+    "authentication": {
+      "used": 856,
+      "limit": 1500,
+      "percentage": 57.07,
+      "resetDate": "2024-03-15T00:00:00Z"
+    },
+    "services": {
+      "used": 423,
+      "limit": 800,
+      "percentage": 52.88,
+      "resetDate": "2024-03-15T00:00:00Z"
+    }
+  },
+  "creditBalances": {
+    "marketing": {
+      "balance": 753,
+      "total": 2000,
+      "validUntil": "2024-03-15T00:00:00Z",
+      "status": "active"
+    },
+    "authentication": {
+      "balance": 644,
+      "total": 1500,
+      "validUntil": "2024-03-15T00:00:00Z",
+      "status": "active"
+    },
+    "services": {
+      "balance": 377,
+      "total": 800,
+      "validUntil": "2024-03-15T00:00:00Z",
+      "status": "active"
+    }
+  },
+  "validityPeriods": {
+    "currentPeriod": {
+      "startDate": "2024-02-15T00:00:00Z",
+      "endDate": "2024-03-15T00:00:00Z",
+      "daysRemaining": 18
+    },
+    "nextRenewal": {
+      "date": "2024-03-15T00:00:00Z",
+      "amount": 4900,
+      "autoRenew": true
+    }
+  },
   "invoices": [
     {
       "Id": 1,
@@ -45,7 +97,7 @@
       "date": "2023-11-15T00:00:00Z",
       "dueDate": "2023-11-15T00:00:00Z"
     },
-{
+    {
       "Id": 5,
       "number": "INV-2023-010",
       "description": "Setup Fee",
