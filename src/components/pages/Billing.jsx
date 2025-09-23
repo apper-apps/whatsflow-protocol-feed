@@ -37,7 +37,7 @@ const safeFormatDistanceToNow = (dateString, options = { addSuffix: true }) => {
 
 const Billing = () => {
   const [subscription, setSubscription] = useState(null)
-  const [invoices, setInvoices] = useState([])
+const [invoices, setInvoices] = useState([])
   const [serviceUsage, setServiceUsage] = useState({})
   const [creditBalances, setCreditBalances] = useState({})
   const [validityPeriods, setValidityPeriods] = useState({})
@@ -46,35 +46,33 @@ const Billing = () => {
     halfYearly: { marketing: 100, authentication: 50, utility: 50, services: 0 },
     yearly: { marketing: 100, authentication: 50, utility: 50, services: 0 }
   })
-  const [credits, setCredits] = useState([])
-  const [activeTab, setActiveTab] = useState('subscription')
+  const [paymentMethods, setPaymentMethods] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+const [activeTab, setActiveTab] = useState('overview')
   useEffect(() => {
     loadBillingData()
   }, [])
 
-const loadBillingData = async () => {
+  const loadBillingData = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      
-      const [subscriptionData, invoiceData, creditData, usageData, validityData] = await Promise.all([
+setLoading(true)
+      const [subData, invoiceData, paymentData, usageData, creditsData, validityData] = await Promise.all([
         billingService.getSubscription(),
-        billingService.getInvoices(), 
-        billingService.getCredits(),
+        billingService.getInvoices(),
+        billingService.getPaymentMethods(),
         billingService.getServiceUsage(),
+        billingService.getCreditBalances(),
         billingService.getValidityPeriods()
       ])
-      
-      setSubscription(subscriptionData)
-      setInvoices(invoiceData)
-      setCredits(creditData)
+      setSubscription(subData)
       setServiceUsage(usageData)
-      setCreditBalances(creditData)
+      setCreditBalances(creditsData)
       setValidityPeriods(validityData)
+      setInvoices(invoiceData)
+      setPaymentMethods(paymentData)
+setError(null)
     } catch (err) {
-      console.error('Failed to load billing data:', err)
       setError('Failed to load billing data')
       toast.error('Failed to load billing data')
     } finally {
@@ -161,13 +159,13 @@ const loadBillingData = async () => {
 
       {/* Tab Navigation */}
       <div className="mb-6">
-<div className="border-b border-surface-200">
+        <div className="border-b border-surface-200">
           <nav className="-mb-px flex space-x-8">
-            {[
-              { id: 'subscription', label: 'Subscription', icon: 'CreditCard' },
-              { id: 'usage', label: 'Usage', icon: 'BarChart3' },
+{[
+              { id: 'overview', label: 'Overview', icon: 'CreditCard' },
               { id: 'invoices', label: 'Invoices', icon: 'FileText' },
-              { id: 'credits', label: 'Credits', icon: 'Coins' }
+              { id: 'payment', label: 'Payment Methods', icon: 'Wallet' },
+              { id: 'plans', label: 'Plans', icon: 'Package' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -186,8 +184,8 @@ const loadBillingData = async () => {
         </div>
       </div>
 
-{/* Subscription Tab */}
-      {activeTab === 'subscription' && (
+      {/* Overview Tab */}
+      {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Current Subscription */}
           <div className="bg-white rounded-lg border border-surface-200 p-6">
@@ -238,9 +236,123 @@ const loadBillingData = async () => {
                 <Button>View Plans</Button>
               </div>
             )}
-</div>
+          </div>
 
-          {/* Credit Balance & Validity Section */}
+{/* Service Usage Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* Marketing Usage */}
+            <div className="bg-white rounded-lg border border-surface-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <ApperIcon name="Megaphone" size={20} className="text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-surface-900">Marketing</h3>
+                  <p className="text-sm text-surface-500">Campaign Messages</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-2xl font-bold text-surface-900">
+                    {serviceUsage.marketing?.used || 0}
+                  </span>
+                  <span className="text-sm text-surface-500">
+                    / {serviceUsage.marketing?.limit || 0}
+                  </span>
+                </div>
+                <div className="w-full bg-surface-200 rounded-full h-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${serviceUsage.marketing?.percentage || 0}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-surface-600">
+                    {serviceUsage.marketing?.percentage || 0}% used
+                  </span>
+                  <span className="text-surface-500">
+                    Credits left: {creditBalances.marketing?.balance || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Authentication Usage */}
+            <div className="bg-white rounded-lg border border-surface-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center">
+                  <ApperIcon name="Shield" size={20} className="text-secondary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-surface-900">Authentication</h3>
+                  <p className="text-sm text-surface-500">OTP & Verification</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-2xl font-bold text-surface-900">
+                    {serviceUsage.authentication?.used || 0}
+                  </span>
+                  <span className="text-sm text-surface-500">
+                    / {serviceUsage.authentication?.limit || 0}
+                  </span>
+                </div>
+                <div className="w-full bg-surface-200 rounded-full h-2">
+                  <div 
+                    className="bg-secondary h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${serviceUsage.authentication?.percentage || 0}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-surface-600">
+                    {serviceUsage.authentication?.percentage || 0}% used
+                  </span>
+                  <span className="text-surface-500">
+                    Credits left: {creditBalances.authentication?.balance || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Service Usage */}
+            <div className="bg-white rounded-lg border border-surface-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
+                  <ApperIcon name="Zap" size={20} className="text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-surface-900">Services</h3>
+                  <p className="text-sm text-surface-500">API & Integrations</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-2xl font-bold text-surface-900">
+                    {serviceUsage.services?.used || 0}
+                  </span>
+                  <span className="text-sm text-surface-500">
+                    / {serviceUsage.services?.limit || 0}
+                  </span>
+                </div>
+                <div className="w-full bg-surface-200 rounded-full h-2">
+                  <div 
+                    className="bg-accent h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${serviceUsage.services?.percentage || 0}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-surface-600">
+                    {serviceUsage.services?.percentage || 0}% used
+                  </span>
+                  <span className="text-surface-500">
+                    Credits left: {creditBalances.services?.balance || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Credit Balance & Validity Summary */}
           <div className="bg-white rounded-lg border border-surface-200 p-6 mb-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
@@ -399,223 +511,73 @@ const loadBillingData = async () => {
             </div>
           )}
         </div>
-)}
-
-      {/* Usage Tab */}
-      {activeTab === 'usage' && (
-        <div className="space-y-6">
-          {/* Service Usage Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Marketing Usage */}
-            <div className="bg-white rounded-lg border border-surface-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <ApperIcon name="Megaphone" size={20} className="text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-surface-900">Marketing</h3>
-                  <p className="text-sm text-surface-500">Campaign Messages</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-surface-900">
-                    {serviceUsage.marketing?.used || 0}
-                  </span>
-                  <span className="text-sm text-surface-500">
-                    / {serviceUsage.marketing?.limit || 0}
-                  </span>
-                </div>
-                <div className="w-full bg-surface-200 rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${serviceUsage.marketing?.percentage || 0}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-surface-600">
-                    {serviceUsage.marketing?.percentage || 0}% used
-                  </span>
-                  <span className="text-surface-500">
-                    Credits left: {creditBalances.marketing?.balance || 0}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Authentication Usage */}
-            <div className="bg-white rounded-lg border border-surface-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center">
-                  <ApperIcon name="Shield" size={20} className="text-secondary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-surface-900">Authentication</h3>
-                  <p className="text-sm text-surface-500">OTP & Verification</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-surface-900">
-                    {serviceUsage.authentication?.used || 0}
-                  </span>
-                  <span className="text-sm text-surface-500">
-                    / {serviceUsage.authentication?.limit || 0}
-                  </span>
-                </div>
-                <div className="w-full bg-surface-200 rounded-full h-2">
-                  <div 
-                    className="bg-secondary h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${serviceUsage.authentication?.percentage || 0}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-surface-600">
-                    {serviceUsage.authentication?.percentage || 0}% used
-                  </span>
-                  <span className="text-surface-500">
-                    Credits left: {creditBalances.authentication?.balance || 0}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Service Usage */}
-            <div className="bg-white rounded-lg border border-surface-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
-                  <ApperIcon name="Zap" size={20} className="text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-surface-900">Services</h3>
-                  <p className="text-sm text-surface-500">API & Integrations</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-surface-900">
-                    {serviceUsage.services?.used || 0}
-                  </span>
-                  <span className="text-sm text-surface-500">
-                    / {serviceUsage.services?.limit || 0}
-                  </span>
-                </div>
-                <div className="w-full bg-surface-200 rounded-full h-2">
-                  <div 
-                    className="bg-accent h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${serviceUsage.services?.percentage || 0}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-surface-600">
-                    {serviceUsage.services?.percentage || 0}% used
-                  </span>
-                  <span className="text-surface-500">
-                    Credits left: {creditBalances.services?.balance || 0}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
-      {/* Credits Tab */}
-      {activeTab === 'credits' && (
+      {/* Payment Methods Tab */}
+      {activeTab === 'payment' && (
         <div className="space-y-6">
-          {/* Credit Balance & Validity Summary */}
-          <div className="bg-white rounded-lg border border-surface-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
-                <ApperIcon name="CreditCard" size={20} className="text-success" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-surface-900">Credit Balance & Validity</h3>
-                <p className="text-sm text-surface-500">Current subscription period details</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h4 className="font-medium text-surface-800">Service Credits</h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-surface-50 rounded-lg">
-                    <span className="text-surface-700">Marketing Credits</span>
-                    <div className="text-right">
-                      <div className="font-semibold text-surface-900">
-                        {creditBalances.marketing?.balance || 0}
-                      </div>
-                      <div className="text-xs text-surface-500">
-                        of {creditBalances.marketing?.total || 0}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-surface-50 rounded-lg">
-                    <span className="text-surface-700">Authentication Credits</span>
-                    <div className="text-right">
-                      <div className="font-semibold text-surface-900">
-                        {creditBalances.authentication?.balance || 0}
-                      </div>
-                      <div className="text-xs text-surface-500">
-                        of {creditBalances.authentication?.total || 0}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-surface-50 rounded-lg">
-                    <span className="text-surface-700">Service Credits</span>
-                    <div className="text-right">
-                      <div className="font-semibold text-surface-900">
-                        {creditBalances.services?.balance || 0}
-                      </div>
-                      <div className="text-xs text-surface-500">
-                        of {creditBalances.services?.total || 0}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-medium text-surface-800">Validity Period</h4>
-                <div className="space-y-3">
-                  <div className="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-surface-800">Current Period</span>
-                      <Badge variant="success" className="text-xs">Active</Badge>
-                    </div>
-                    <div className="text-sm text-surface-600 mb-2">
-                      {safeFormatDate(validityPeriods.currentPeriod?.startDate)} - {safeFormatDate(validityPeriods.currentPeriod?.endDate)}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ApperIcon name="Clock" size={14} className="text-surface-500" />
-                      <span className="text-sm font-medium text-surface-700">
-                        {validityPeriods.currentPeriod?.daysRemaining || 0} days remaining
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-4 border border-surface-200 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-surface-800">Next Renewal</span>
-                      <Badge variant={validityPeriods.nextRenewal?.autoRenew ? "success" : "warning"} className="text-xs">
-                        {validityPeriods.nextRenewal?.autoRenew ? "Auto-renew" : "Manual"}
-                      </Badge>
-                    </div>
-                    <div className="text-sm text-surface-600 mb-1">
-                      {safeFormatDate(validityPeriods.nextRenewal?.date)}
-                    </div>
-                    <div className="text-sm font-medium text-surface-700">
-                      {formatCurrency(validityPeriods.nextRenewal?.amount || 0)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-surface-900">Payment Methods</h2>
+            <Button icon="Plus">Add Payment Method</Button>
           </div>
-        </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {paymentMethods.map((method) => (
+              <motion.div
+                key={method.Id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-lg border border-surface-200 p-4"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-surface-100 rounded-lg flex items-center justify-center">
+                      <ApperIcon name="CreditCard" size={20} className="text-surface-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-surface-900">
+                        •••• •••• •••• {method.last4}
+                      </div>
+                      <div className="text-sm text-surface-500">{method.brand.toUpperCase()}</div>
+                    </div>
+                  </div>
+                  {method.isDefault && (
+                    <Badge variant="primary" size="sm">Default</Badge>
+                  )}
+</div>
+                
+                <div className="flex items-center justify-between text-sm text-surface-500 mb-3">
+                  <span>Expires {method.expMonth}/{method.expYear}</span>
+                  <span>Added {safeFormatDistanceToNow(method.createdAt)}</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {!method.isDefault && (
+                    <Button variant="outline" size="sm" className="flex-1">
+                      Set Default
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" icon="Trash2" className="text-error hover:text-error">
+                    Remove
+                  </Button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {paymentMethods.length === 0 && (
+            <div className="text-center py-12">
+              <ApperIcon name="Wallet" size={48} className="text-surface-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-surface-900 mb-2">No payment methods</h3>
+              <p className="text-surface-600 mb-4">Add a payment method to manage your subscription</p>
+              <Button icon="Plus">Add Payment Method</Button>
+            </div>
+          )}
+</div>
       )}
 
       {/* Plans Tab */}
-      {activeTab === 'plans' && (
+{activeTab === 'plans' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
