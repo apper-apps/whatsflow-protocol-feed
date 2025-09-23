@@ -1,4 +1,5 @@
-import mockData from '../mockData/billing.json'
+import mockData from "../mockData/billing.json";
+import React from "react";
 
 let billingData = { ...mockData }
 
@@ -72,6 +73,7 @@ const billingService = {
   },
 
   // Delete payment method
+// Delete payment method
   deletePaymentMethod: (id) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -83,6 +85,40 @@ const billingService = {
           reject(new Error('Payment method not found'))
         }
       }, 300)
+    })
+  },
+  // Calculate plan total with credits
+  calculatePlanTotal: (planType, creditQuantities) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const rates = {
+          monthly: { platform: 800, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+          halfYearly: { platform: 600, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+          yearly: { platform: 400, marketing: 0.88, authentication: 0.13, utility: 0.13 }
+        }
+        
+        const planRates = rates[planType]
+        if (!planRates) {
+          resolve({ error: 'Invalid plan type' })
+          return
+        }
+        
+        const creditsTotal = (creditQuantities.marketing * planRates.marketing) + 
+                           (creditQuantities.authentication * planRates.authentication) + 
+                           (creditQuantities.utility * planRates.utility)
+        
+        resolve({
+          platform: planRates.platform,
+          credits: creditsTotal,
+          total: planRates.platform + creditsTotal,
+          breakdown: {
+            marketing: creditQuantities.marketing * planRates.marketing,
+            authentication: creditQuantities.authentication * planRates.authentication,
+            utility: creditQuantities.utility * planRates.utility,
+services: 0
+          }
+        })
+      }, 200)
     })
   }
 }

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { format, formatDistanceToNow } from "date-fns";
+import { billingService } from "@/services";
 import ApperIcon from "@/components/ApperIcon";
+import Contacts from "@/components/pages/Contacts";
+import Input from "@/components/atoms/Input";
+import Input from "@/components/atoms/Input";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
-import { billingService } from "@/services";
-
-// Helper function to safely format dates
 const safeFormatDate = (dateString, formatString = 'MMM dd, yyyy') => {
   try {
     const date = new Date(dateString)
@@ -37,7 +38,12 @@ const safeFormatDistanceToNow = (dateString, options = { addSuffix: true }) => {
 
 const Billing = () => {
   const [subscription, setSubscription] = useState(null)
-  const [invoices, setInvoices] = useState([])
+const [invoices, setInvoices] = useState([])
+  const [creditQuantities, setCreditQuantities] = useState({
+    monthly: { marketing: 100, authentication: 50, utility: 50, services: 0 },
+    halfYearly: { marketing: 100, authentication: 50, utility: 50, services: 0 },
+    yearly: { marketing: 100, authentication: 50, utility: 50, services: 0 }
+  })
   const [paymentMethods, setPaymentMethods] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -396,49 +402,171 @@ const [activeTab, setActiveTab] = useState('overview')
       )}
 
       {/* Plans Tab */}
-      {activeTab === 'plans' && (
+{activeTab === 'plans' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-semibold text-surface-900">WhatsApp Platform Subscription Plans</h3>
-              <p className="text-sm text-surface-600">Choose the perfect plan for your business needs</p>
+              <p className="text-sm text-surface-600">Choose the perfect plan for your business needs and select your credit requirements</p>
             </div>
           </div>
+
+          {/* Credit Pricing Helper Function */}
+          {(() => {
+            const calculatePlanTotal = (planType) => {
+              const quantities = creditQuantities[planType]
+              const rates = {
+                monthly: { platform: 800, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+                halfYearly: { platform: 600, marketing: 0.88, authentication: 0.13, utility: 0.13 },
+                yearly: { platform: 400, marketing: 0.88, authentication: 0.13, utility: 0.13 }
+              }
+              
+              const planRates = rates[planType]
+              const creditsTotal = (quantities.marketing * planRates.marketing) + 
+                                 (quantities.authentication * planRates.authentication) + 
+                                 (quantities.utility * planRates.utility)
+              
+              return {
+                platform: planRates.platform,
+                credits: creditsTotal,
+                total: planRates.platform + creditsTotal
+              }
+            }
+
+            const updateCreditQuantity = (planType, creditType, value) => {
+              const numValue = Math.max(0, parseInt(value) || 0)
+              setCreditQuantities(prev => ({
+                ...prev,
+                [planType]: {
+                  ...prev[planType],
+                  [creditType]: numValue
+                }
+              }))
+            }
+
+            return null
+          })()}
 
           {/* Subscription Plans */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Monthly Plan */}
             <div className="bg-white border border-surface-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-<div className="text-center mb-6">
+              <div className="text-center mb-6">
                 <h4 className="text-xl font-semibold text-surface-900 mb-2">Monthly Plan</h4>
                 <p className="text-sm text-surface-600">Perfect for getting started</p>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Platform Rental</span>
                   <span className="text-sm font-semibold text-surface-900">₹800/month</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Marketing</span>
-                  <span className="text-sm font-semibold text-surface-900">₹0.88</span>
+              </div>
+
+              {/* Credit Selection */}
+              <div className="space-y-4 mb-6">
+                <h5 className="text-sm font-semibold text-surface-800 mb-3">Select Credits Needed</h5>
+                
+                {/* Marketing Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Marketing (₹0.88/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.monthly.marketing}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          monthly: { ...prev.monthly, marketing: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.monthly.marketing * 0.88).toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Authentication</span>
-                  <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Authentication Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Authentication (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.monthly.authentication}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          monthly: { ...prev.monthly, authentication: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.monthly.authentication * 0.13).toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Utility</span>
-                  <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Utility Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Utility (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.monthly.utility}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          monthly: { ...prev.monthly, utility: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.monthly.utility * 0.13).toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-sm font-medium text-surface-700">Service</span>
-                  <Badge variant="success" className="text-xs">FREE</Badge>
+
+                {/* Service Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Service</span>
+                    <Badge variant="success" className="text-xs">FREE</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Calculation */}
+              <div className="bg-surface-50 p-4 rounded-lg mb-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Platform Rental:</span>
+                    <span>₹800.00</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Credits Total:</span>
+                    <span>₹{((creditQuantities.monthly.marketing * 0.88) + (creditQuantities.monthly.authentication * 0.13) + (creditQuantities.monthly.utility * 0.13)).toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-surface-200 pt-2">
+                    <div className="flex justify-between font-semibold text-surface-900">
+                      <span>Total Amount:</span>
+                      <span>₹{(800 + (creditQuantities.monthly.marketing * 0.88) + (creditQuantities.monthly.authentication * 0.13) + (creditQuantities.monthly.utility * 0.13)).toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               <div className="mt-6">
-                <Button className="w-full">
+                <Button className="w-full" onClick={() => toast.success('Monthly plan selected successfully!')}>
                   <ApperIcon name="CreditCard" size={16} className="mr-2" />
                   Choose Monthly
                 </Button>
@@ -459,37 +587,117 @@ const [activeTab, setActiveTab] = useState('overview')
                 </div>
               </div>
               
-<div className="space-y-4">
+              <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Platform Rental</span>
                   <span className="text-sm font-semibold text-surface-900">₹600/month</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Marketing</span>
-<div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.88</span>
+              </div>
+
+              {/* Credit Selection */}
+              <div className="space-y-4 mb-6">
+                <h5 className="text-sm font-semibold text-surface-800 mb-3">Select Credits Needed</h5>
+                
+                {/* Marketing Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Marketing (₹0.88/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.halfYearly.marketing}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          halfYearly: { ...prev.halfYearly, marketing: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.halfYearly.marketing * 0.88).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Authentication</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Authentication Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Authentication (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.halfYearly.authentication}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          halfYearly: { ...prev.halfYearly, authentication: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.halfYearly.authentication * 0.13).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Utility</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Utility Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Utility (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.halfYearly.utility}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          halfYearly: { ...prev.halfYearly, utility: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.halfYearly.utility * 0.13).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-sm font-medium text-surface-700">Service</span>
-                  <Badge variant="success" className="text-xs">FREE</Badge>
+
+                {/* Service Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Service</span>
+                    <Badge variant="success" className="text-xs">FREE</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Calculation */}
+              <div className="bg-surface-50 p-4 rounded-lg mb-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Platform Rental:</span>
+                    <span>₹600.00</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Credits Total:</span>
+                    <span>₹{((creditQuantities.halfYearly.marketing * 0.88) + (creditQuantities.halfYearly.authentication * 0.13) + (creditQuantities.halfYearly.utility * 0.13)).toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-surface-200 pt-2">
+                    <div className="flex justify-between font-semibold text-surface-900">
+                      <span>Total Amount:</span>
+                      <span>₹{(600 + (creditQuantities.halfYearly.marketing * 0.88) + (creditQuantities.halfYearly.authentication * 0.13) + (creditQuantities.halfYearly.utility * 0.13)).toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               <div className="mt-6">
-                <Button className="w-full" variant="primary">
+                <Button className="w-full" variant="primary" onClick={() => toast.success('Half yearly plan selected successfully!')}>
                   <ApperIcon name="CreditCard" size={16} className="mr-2" />
                   Choose Half Yearly
                 </Button>
@@ -506,37 +714,117 @@ const [activeTab, setActiveTab] = useState('overview')
                 </div>
               </div>
               
-<div className="space-y-4">
+              <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center py-3 border-b border-surface-100">
                   <span className="text-sm font-medium text-surface-700">Platform Rental</span>
                   <span className="text-sm font-semibold text-surface-900">₹400/month</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-<span className="text-sm font-medium text-surface-700">Marketing</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.88</span>
+              </div>
+
+              {/* Credit Selection */}
+              <div className="space-y-4 mb-6">
+                <h5 className="text-sm font-semibold text-surface-800 mb-3">Select Credits Needed</h5>
+                
+                {/* Marketing Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Marketing (₹0.88/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.yearly.marketing}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          yearly: { ...prev.yearly, marketing: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.yearly.marketing * 0.88).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Authentication</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Authentication Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Authentication (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.yearly.authentication}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          yearly: { ...prev.yearly, authentication: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.yearly.authentication * 0.13).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-surface-100">
-                  <span className="text-sm font-medium text-surface-700">Utility</span>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-surface-900">₹0.13</span>
+
+                {/* Utility Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Utility (₹0.13/credit)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={creditQuantities.yearly.utility}
+                      onChange={(e) => {
+                        const numValue = Math.max(0, parseInt(e.target.value) || 0)
+                        setCreditQuantities(prev => ({
+                          ...prev,
+                          yearly: { ...prev.yearly, utility: numValue }
+                        }))
+                      }}
+                      className="w-20 text-sm"
+                      min="0"
+                    />
+                    <span className="text-xs text-surface-600">= ₹{(creditQuantities.yearly.utility * 0.13).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-sm font-medium text-surface-700">Service</span>
-                  <Badge variant="success" className="text-xs">FREE</Badge>
+
+                {/* Service Credits */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-surface-700">Service</span>
+                    <Badge variant="success" className="text-xs">FREE</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Calculation */}
+              <div className="bg-surface-50 p-4 rounded-lg mb-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Platform Rental:</span>
+                    <span>₹400.00</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Credits Total:</span>
+                    <span>₹{((creditQuantities.yearly.marketing * 0.88) + (creditQuantities.yearly.authentication * 0.13) + (creditQuantities.yearly.utility * 0.13)).toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-surface-200 pt-2">
+                    <div className="flex justify-between font-semibold text-surface-900">
+                      <span>Total Amount:</span>
+                      <span>₹{(400 + (creditQuantities.yearly.marketing * 0.88) + (creditQuantities.yearly.authentication * 0.13) + (creditQuantities.yearly.utility * 0.13)).toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               <div className="mt-6">
-                <Button className="w-full" variant="outline">
+                <Button className="w-full" variant="outline" onClick={() => toast.success('Yearly plan selected successfully!')}>
                   <ApperIcon name="CreditCard" size={16} className="mr-2" />
                   Choose Yearly
                 </Button>
