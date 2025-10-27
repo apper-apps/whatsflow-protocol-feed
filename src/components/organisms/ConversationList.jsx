@@ -126,11 +126,11 @@ return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="p-4 border-b border-surface-200">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-surface-900">CRM Inbox</h2>
+<div className="flex items-center justify-between mb-5">
+          <h2 className="text-xl font-bold text-surface-900 tracking-tight">Conversations</h2>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-surface-500">
-              {Array.isArray(filteredConversations) ? filteredConversations.length : 0}
+            <span className="text-xs font-semibold text-surface-500 bg-surface-100 px-3 py-1.5 rounded-full border border-surface-200">
+              {Array.isArray(filteredConversations) ? filteredConversations.length : 0} Total
             </span>
           </div>
         </div>
@@ -144,16 +144,16 @@ return (
         
         {/* Filter Tabs */}
         <div className="flex items-center gap-1 mt-3 bg-surface-100 p-1 rounded-lg">
-          <button className="flex-1 py-2 px-3 text-sm font-medium text-white bg-primary rounded-md transition-colors">
+<button className="flex-1 py-2.5 px-4 text-sm font-semibold text-white bg-gradient-to-r from-primary to-secondary rounded-lg shadow-sm transition-all hover:shadow-md transform hover:scale-105">
             All
           </button>
-          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+          <button className="flex-1 py-2.5 px-4 text-sm font-semibold text-surface-600 hover:text-surface-900 bg-surface-50 hover:bg-surface-100 rounded-lg transition-all border border-surface-200 hover:border-surface-300 hover:shadow-sm">
             Unread
           </button>
-          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+          <button className="flex-1 py-2.5 px-4 text-sm font-semibold text-surface-600 hover:text-surface-900 bg-surface-50 hover:bg-surface-100 rounded-lg transition-all border border-surface-200 hover:border-surface-300 hover:shadow-sm">
             Assigned
           </button>
-          <button className="flex-1 py-2 px-3 text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors">
+          <button className="flex-1 py-2.5 px-4 text-sm font-semibold text-surface-600 hover:text-surface-900 bg-surface-50 hover:bg-surface-100 rounded-lg transition-all border border-surface-200 hover:border-surface-300 hover:shadow-sm">
             Closed
           </button>
         </div>

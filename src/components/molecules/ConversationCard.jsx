@@ -50,14 +50,14 @@ const getStatusVariant = (status) => {
   }
 
 return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
+<motion.div
+      whileHover={{ scale: 1.01, x: 4 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`p-4 border-b border-surface-200 cursor-pointer transition-all duration-150 relative ${
+      className={`p-4 border-b border-surface-200 cursor-pointer transition-all duration-200 relative ${
         isActive 
-          ? 'bg-primary/5 border-l-4 border-l-primary' 
-          : 'hover:bg-surface-50'
+          ? 'bg-gradient-to-r from-primary/10 to-primary/5 border-l-[5px] border-l-primary shadow-sm' 
+          : 'hover:bg-surface-50 hover:shadow-sm border-l-[5px] border-l-transparent'
       }`}
       {...props}
     >

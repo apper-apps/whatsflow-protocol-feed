@@ -35,30 +35,38 @@ const Inbox = () => {
 
   return (
 <div className="h-full flex flex-col">
-      <div className="bg-white border-b border-surface-200 px-6 py-5 shadow-sm">
+      <div className="bg-gradient-to-r from-white to-surface-50 border-b border-surface-200 px-6 py-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-surface-900">Inbox</h1>
-            <p className="text-sm text-surface-600 mt-1">Manage your conversations and messages</p>
+            <h1 className="text-3xl font-bold text-surface-900 tracking-tight">Inbox</h1>
+            <p className="text-sm text-surface-500 mt-1.5">Manage your conversations and messages in real-time</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="px-3 py-1">
-              {selectedConversation ? 'Active' : 'Select Conversation'}
+          <div className="flex items-center gap-3">
+            <Badge 
+              variant={selectedConversation ? "default" : "secondary"} 
+              className={`px-4 py-1.5 text-xs font-semibold shadow-sm ${
+                selectedConversation 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-surface-100 text-surface-600 border border-surface-200'
+              }`}
+            >
+              {selectedConversation ? '● Active' : 'No Selection'}
             </Badge>
           </div>
         </div>
       </div>
       
-<div className="flex-1 flex overflow-hidden">
+<div className="flex-1 flex overflow-hidden bg-surface-50">
         {/* Conversation List */}
-        <div className="w-1/3 border-r border-surface-200 bg-white flex-shrink-0">
+        <div className="w-1/3 border-r border-surface-200 bg-white flex-shrink-0 shadow-sm">
           <ConversationList 
             selectedConversationId={selectedConversation?.Id}
             onSelectConversation={handleConversationSelect}
           />
         </div>
-{/* Message Thread */}
-        <div className={`${showLeadPanel ? 'w-0 flex-1 min-w-0' : 'flex-1'} border-r border-surface-200`}>
+
+        {/* Message Thread */}
+        <div className={`${showLeadPanel ? 'w-0 flex-1 min-w-0' : 'flex-1'} border-r border-surface-200 bg-white`}>
           <MessageThread
             conversation={selectedConversation}
             onStatusChange={handleStatusChange}
@@ -68,8 +76,8 @@ const Inbox = () => {
         </div>
 
         {/* Lead Details Panel */}
-{showLeadPanel && selectedConversation && (
-          <div className="w-80 bg-surface-50 border-l border-surface-200 flex-shrink-0 overflow-hidden">
+        {showLeadPanel && selectedConversation && (
+          <div className="w-80 bg-white border-l-2 border-surface-300 flex-shrink-0 overflow-hidden shadow-lg">
             <LeadDetailsPanel
               conversation={selectedConversation}
               onClose={() => setShowLeadPanel(false)}

@@ -263,21 +263,30 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
           </div>
           
           <div className="flex items-center gap-2">
-            <Badge variant={getStatusVariant(conversation.status)} className="px-3 py-1">
-              {conversation.status}
+<Badge 
+              variant={getStatusVariant(conversation.status)} 
+              className={`px-4 py-1.5 text-xs font-bold shadow-sm ${
+                conversation.status === 'resolved' 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : conversation.status === 'ongoing'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`}
+            >
+              {conversation.status.toUpperCase()}
             </Badge>
             
             {/* Header Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {/* Status Actions */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 {conversation.status !== 'resolved' && (
                   <Button
                     variant="ghost"
                     size="sm"
                     icon="CheckCircle"
                     onClick={() => handleStatusChange('resolved')}
-                    className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                    className="text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold border border-transparent hover:border-green-200 transition-all"
                   >
                     Resolve
                   </Button>
@@ -288,7 +297,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
                     size="sm"
                     icon="RotateCcw"
                     onClick={() => handleStatusChange('ongoing')}
-                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold border border-transparent hover:border-blue-200 transition-all"
                   >
                     Reopen
                   </Button>
@@ -296,16 +305,16 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
               </div>
 
               {/* Separator */}
-              <div className="w-px h-6 bg-surface-200"></div>
+              <div className="w-px h-8 bg-surface-300"></div>
 
               {/* Secondary Actions */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   icon="User"
                   onClick={onShowLeadDetails}
-                  className="xl:hidden text-surface-600 hover:text-surface-900 hover:bg-surface-50"
+                  className="xl:hidden text-surface-600 hover:text-surface-900 hover:bg-surface-100 font-semibold border border-transparent hover:border-surface-300 transition-all"
                 >
                   Lead Details
                 </Button>
@@ -313,7 +322,7 @@ const handleAssignAgent = async (agentName, isReassignment = false) => {
                   variant="ghost"
                   size="sm"
                   icon="MoreVertical"
-                  className="text-surface-600 hover:text-surface-900 hover:bg-surface-50"
+                  className="text-surface-600 hover:text-surface-900 hover:bg-surface-100 border border-transparent hover:border-surface-300 transition-all"
                 />
               </div>
             </div>
@@ -504,6 +513,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
           size="sm"
           icon="UserPlus"
           onClick={() => handleOpenModal('assign')}
+          className="font-semibold border border-transparent hover:border-surface-300 transition-all"
         >
           Assign
         </Button>
@@ -514,7 +524,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             size="sm"
             icon="UserCheck"
             onClick={() => handleOpenModal('reassign')}
-            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold border border-transparent hover:border-blue-200 transition-all"
           >
             Reassign
           </Button>
@@ -523,7 +533,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             size="sm"
             icon="ArrowRightLeft"
             onClick={() => handleOpenModal('transfer')}
-            className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+            className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 font-semibold border border-transparent hover:border-orange-200 transition-all"
           >
             Transfer
           </Button>
@@ -531,24 +541,24 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-surface-200">
+            <div className="flex items-center justify-between p-6 border-b-2 border-surface-200 bg-gradient-to-r from-surface-50 to-white">
               <div>
-                <h3 className="text-xl font-semibold text-surface-900">{getModalTitle()}</h3>
-                <p className="text-sm text-surface-600 mt-1">{getModalDescription()}</p>
+                <h3 className="text-2xl font-bold text-surface-900">{getModalTitle()}</h3>
+                <p className="text-sm text-surface-600 mt-1.5">{getModalDescription()}</p>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 icon="X"
                 onClick={() => setShowModal(false)}
-                className="text-surface-400 hover:text-surface-600"
+                className="text-surface-400 hover:text-surface-600 hover:bg-surface-100 rounded-full"
               />
             </div>
 
@@ -556,14 +566,14 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             <div className="p-6">
               {/* Current Assignment Info */}
               {conversation.assignedTo && (modalType === 'reassign' || modalType === 'transfer') && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl p-4 mb-6 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <ApperIcon name="User" size={16} className="text-blue-600" />
+                    <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center shadow-sm">
+                      <ApperIcon name="User" size={18} className="text-blue-700" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-blue-900">Currently Assigned</p>
-                      <p className="text-sm text-blue-700">{conversation.assignedTo}</p>
+                      <p className="text-sm font-bold text-blue-900">Currently Assigned</p>
+                      <p className="text-sm text-blue-700 font-medium">{conversation.assignedTo}</p>
                     </div>
                   </div>
                 </div>
@@ -571,19 +581,19 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
 
               {/* Team Member Selection */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-surface-900 mb-3">
+                <label className="block text-sm font-bold text-surface-900 mb-4">
                   Select Team Member
                 </label>
-                <div className="space-y-3 max-h-64 overflow-y-auto">
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-2">
                   {teamMembers.map((member) => (
                     <button
                       key={member.Id}
                       onClick={() => setSelectedAgent(member)}
                       disabled={loading || member.name === conversation.assignedTo}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                      className={`w-full text-left p-4 rounded-xl border-2 transition-all transform ${
                         selectedAgent?.Id === member.Id
-                          ? 'border-primary bg-primary/5 shadow-sm'
-                          : 'border-surface-200 hover:border-surface-300 hover:bg-surface-50'
+                          ? 'border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-md scale-105'
+                          : 'border-surface-200 hover:border-surface-400 hover:bg-surface-50 hover:shadow-sm'
                       } ${
                         member.name === conversation.assignedTo
                           ? 'opacity-50 cursor-not-allowed'
@@ -592,21 +602,21 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            member.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                          <div className={`w-3 h-3 rounded-full shadow-sm ${
+                            member.status === 'active' ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
                           }`} />
                           <div>
-                            <div className="font-medium text-surface-900">{member.name}</div>
-                            <div className="text-sm text-surface-600 capitalize">{member.role}</div>
+                            <div className="font-bold text-surface-900">{member.name}</div>
+                            <div className="text-sm text-surface-600 capitalize font-medium">{member.role}</div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           {member.name === conversation.assignedTo && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">Current</span>
+                            <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold shadow-sm">Current</span>
                           )}
                           {selectedAgent?.Id === member.Id && (
-                            <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                              <ApperIcon name="Check" size={14} className="text-white" />
+                            <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center shadow-md">
+                              <ApperIcon name="Check" size={16} className="text-white" />
                             </div>
                           )}
                         </div>
@@ -618,7 +628,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
 
               {/* Assignment Reason */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-surface-900 mb-2">
+                <label className="block text-sm font-bold text-surface-900 mb-2">
                   Reason (Optional)
                 </label>
                 <Input
@@ -626,21 +636,26 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                   value={assignmentReason}
                   onChange={(e) => setAssignmentReason(e.target.value)}
                   disabled={loading}
-                  className="w-full"
+                  className="w-full border-2 focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               {/* Preview Section */}
               {selectedAgent && (
-                <div className="mb-6 p-4 bg-surface-50 rounded-lg border border-surface-200">
-                  <div className="text-sm font-medium text-surface-900 mb-2">Action Preview</div>
-                  <div className="text-sm text-surface-700">
+                <div className="mb-6 p-4 bg-gradient-to-r from-surface-50 to-surface-100 rounded-xl border-2 border-surface-300 shadow-sm">
+                  <div className="text-sm font-bold text-surface-900 mb-2 flex items-center gap-2">
+                    <ApperIcon name="Eye" size={16} className="text-primary" />
+                    Action Preview
+                  </div>
+                  <div className="text-sm text-surface-700 font-medium">
                     {modalType === 'assign' 
                       ? `Will assign conversation to ${selectedAgent.name}`
                       : `Will ${modalType} conversation from ${conversation.assignedTo} to ${selectedAgent.name}`
                     }
                     {assignmentReason && (
-                      <span className="block mt-1 text-surface-600 italic">Reason: {assignmentReason}</span>
+                      <span className="block mt-2 text-surface-600 italic bg-white p-2 rounded-lg border border-surface-200">
+                        Reason: {assignmentReason}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -648,12 +663,12 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex gap-3 p-6 border-t border-surface-200 bg-surface-50 rounded-b-xl">
+            <div className="flex gap-3 p-6 border-t-2 border-surface-200 bg-gradient-to-r from-surface-50 to-white rounded-b-2xl">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowModal(false)}
-                className="flex-1"
+                className="flex-1 font-semibold border-2 hover:bg-surface-100 transition-all"
                 disabled={loading}
               >
                 Cancel
@@ -662,7 +677,7 @@ const AssignmentButton = ({ conversation, onAssign, onTransfer }) => {
                 variant="primary"
                 size="sm"
                 onClick={handleConfirmAction}
-                className="flex-1"
+                className="flex-1 font-semibold shadow-md hover:shadow-lg transition-all"
                 disabled={!selectedAgent || loading}
                 loading={loading}
               >
